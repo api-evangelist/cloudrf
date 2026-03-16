@@ -1,18 +1,43 @@
-name: Swagger UI
-description: '  https://cloudrf.com/documentation/developer/swagger-ui/'
-image: >-
-  https://kinlane-productions2.s3.amazonaws.com/apis-json-icons/swagger-ui-kpuWpmRX.png
-url: https://example.com/apis/swagger-ui-kpuWpmRX.yml
-created: 2024/7/2
-modified: 2024/7/2
-specificationVersion: '0.16'
+aid: cloudrf
+url: >-
+  https://raw.githubusercontent.com/api-evangelist/cloudrf/refs/heads/main/apis.yml
+name: CloudRF
 tags:
-  - Bookmark
+  - RF
+  - Radio Frequency
+  - Signal Analysis
+  - Telecommunications
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+access: 3rd-Party
+created: '2024-07-02'
+modified: '2026-03-16'
+position: Consumer
+description: >-
+  CloudRF is a radio frequency (RF) propagation and signal modeling platform
+  that provides APIs for RF analysis, coverage mapping, and wireless network
+  planning.
 apis:
-  - name: Swagger UI
-    description: '  https://cloudrf.com/documentation/developer/swagger-ui/'
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  - aid: cloudrf:cloudrf-api
+    name: CloudRF API
+    tags:
+      - RF
+      - Signal Analysis
     humanURL: https://cloudrf.com/documentation/developer/swagger-ui/
+    properties:
+      - url: https://cloudrf.com/documentation/developer/swagger-ui/
+        type: Documentation
+    description: >-
+      CloudRF API provides access to RF propagation modeling and signal
+      analysis capabilities.
+common:
+  - type: Website
+    url: https://cloudrf.com/
+  - type: Documentation
+    url: https://cloudrf.com/documentation/
+  - type: Privacy Policy
+    url: https://cloudrf.com/privacy
 maintainers:
-  - FN: API Evangelist
-    email: info@apievangelist.com
+  - FN: Kin Lane
+    email: kin@apievangelist.com
+specificationVersion: '0.19'
