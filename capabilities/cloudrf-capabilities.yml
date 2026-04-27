@@ -1,0 +1,217 @@
+# Naftiko capabilities profile for the CloudRF API.
+# Capabilities are derived from the CloudRF developer documentation at
+# https://cloudrf.com/documentation/developer/ and the locally vendored
+# OpenAPI at openapi/cloudrf-openapi.yml.
+provider: cloudrf
+name: CloudRF
+description: >-
+  RF propagation modeling, coverage analysis, mesh and multisite
+  planning, HF analysis, 3D coverage, satellite modeling, interference
+  detection, signal geo-location, archive and export, clutter and noise
+  data management, and reusable templates.
+capabilities:
+  - id: cloudrf.area.create
+    name: Create coverage heatmap
+    description: Generate an omni-directional point-to-multipoint coverage heatmap from a transmitter site.
+    inputs:
+      - api-key
+      - site
+      - transmitter
+      - receiver
+      - environment
+      - output
+    outputs:
+      - calculation
+      - coverage-result
+  - id: cloudrf.path.create
+    name: Run point-to-point link
+    description: Analyse a point-to-point RF link from a transmitter to a receiver.
+    inputs:
+      - api-key
+      - transmitter
+      - receiver
+      - environment
+    outputs:
+      - link-result
+  - id: cloudrf.points.create
+    name: Many-to-one points analysis
+    description: Test multiple transmitters against a single receiver location.
+    inputs:
+      - api-key
+      - transmitters
+      - receiver
+    outputs:
+      - point-results
+  - id: cloudrf.multilink.create
+    name: Mesh network analysis
+    description: Analyse mesh network connectivity across many radios.
+    inputs:
+      - api-key
+      - radios
+      - environment
+    outputs:
+      - mesh-result
+  - id: cloudrf.multisite.create
+    name: Multi-site coverage
+    description: Run multiple multipoint coverage heatmaps in a single request.
+    inputs:
+      - api-key
+      - sites
+    outputs:
+      - calculations
+  - id: cloudrf.hf.create
+    name: HF point-to-multipoint
+    description: HF (High Frequency) point-to-multipoint frequency analysis.
+    inputs:
+      - api-key
+      - site
+      - frequency
+      - time-of-day
+    outputs:
+      - hf-result
+  - id: cloudrf.hf-path.create
+    name: HF point-to-point
+    description: HF point-to-point frequency analysis from Tx to Rx.
+    inputs:
+      - api-key
+      - transmitter
+      - receiver
+      - frequency
+    outputs:
+      - hf-link-result
+  - id: cloudrf.best-site
+    name: Find best site
+    description: Identify the optimal transmitter site within a defined area.
+    inputs:
+      - api-key
+      - area
+      - constraints
+    outputs:
+      - best-site
+  - id: cloudrf.best-server
+    name: Best server for receiver
+    description: Locate the best server (Tx) for a given receiver location.
+    inputs:
+      - api-key
+      - receiver
+      - servers
+    outputs:
+      - best-server
+  - id: cloudrf.merge
+    name: Merge calculations
+    description: Consolidate multiple sites into a super coverage layer.
+    inputs:
+      - api-key
+      - calculation-ids
+    outputs:
+      - merged-layer
+  - id: cloudrf.interference
+    name: Network interference
+    description: Detect interference between two networks of transmitters.
+    inputs:
+      - api-key
+      - network-a
+      - network-b
+    outputs:
+      - interference-report
+  - id: cloudrf.locate
+    name: Geo-locate signal
+    description: Geo-locate a signal source from a set of power measurements.
+    inputs:
+      - api-key
+      - measurements
+    outputs:
+      - location
+  - id: cloudrf.3d.create
+    name: 3D coverage
+    description: Calculate 3D coverage for a 3D scene/model.
+    inputs:
+      - api-key
+      - site
+      - model-id
+    outputs:
+      - 3d-result
+  - id: cloudrf.3d.upload
+    name: Upload 3D model
+    description: Upload a GLB 3D model to be used in 3D coverage calculations.
+    inputs:
+      - api-key
+      - glb-file
+    outputs:
+      - model-id
+  - id: cloudrf.archive.list
+    name: List archived calculations
+    description: List previously run calculations from the archive.
+    inputs:
+      - api-key
+      - filters
+    outputs:
+      - calculations
+  - id: cloudrf.archive.delete
+    name: Delete archived calculation
+    description: Remove a single calculation from the archive.
+    inputs:
+      - api-key
+      - calculation-id
+    outputs:
+      - status
+  - id: cloudrf.network.delete
+    name: Delete network
+    description: Delete an entire network of calculations.
+    inputs:
+      - api-key
+      - network-id
+    outputs:
+      - status
+  - id: cloudrf.export
+    name: Export calculation
+    description: Export a calculation in TIFF, KMZ, SHP, JSON, or ZIP format.
+    inputs:
+      - api-key
+      - calculation-id
+      - format
+    outputs:
+      - file
+  - id: cloudrf.clutter
+    name: Manage clutter
+    description: Upload, list, or delete clutter GeoJSON data used in calculations.
+    inputs:
+      - api-key
+      - action
+      - clutter
+    outputs:
+      - status
+  - id: cloudrf.noise
+    name: Manage noise data
+    description: Submit, query, average, or delete noise measurements in the noise database.
+    inputs:
+      - api-key
+      - action
+      - measurements
+    outputs:
+      - noise
+  - id: cloudrf.account.metrics
+    name: Account API usage metrics
+    description: Retrieve API usage metrics for the authenticated account.
+    inputs:
+      - api-key
+    outputs:
+      - metrics
+  - id: cloudrf.template
+    name: Manage templates
+    description: List or create reusable calculation templates.
+    inputs:
+      - api-key
+      - action
+      - template
+    outputs:
+      - template
+  - id: cloudrf.satellite.create
+    name: Satellite coverage
+    description: Model satellite coverage from satellite database parameters.
+    inputs:
+      - api-key
+      - satellite
+      - receiver
+    outputs:
+      - satellite-coverage

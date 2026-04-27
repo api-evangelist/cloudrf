@@ -1,0 +1,104 @@
+extends:
+  - spectral:oas
+
+# Spectral linting rules for the CloudRF REST API at api.cloudrf.com.
+rules:
+  cloudrf-info-contact:
+    description: API contact information must be present.
+    severity: error
+    given: "$.info"
+    then:
+      field: contact
+      function: truthy
+
+  cloudrf-info-license:
+    description: API license must be declared.
+    severity: warn
+    given: "$.info"
+    then:
+      field: license
+      function: truthy
+
+  cloudrf-server-https:
+    description: All server URLs must use HTTPS for the CloudRF API.
+    severity: error
+    given: "$.servers[*].url"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^https://"
+
+  cloudrf-server-host:
+    description: Server URLs should target api.cloudrf.com or dev.cloudrf.com.
+    severity: warn
+    given: "$.servers[*].url"
+    then:
+      function: pattern
+      functionOptions:
+        match: "(api|dev)\\.cloudrf\\.com"
+
+  cloudrf-apikey-required:
+    description: An ApiKey security scheme using the `key` HTTP header must be declared.
+    severity: error
+    given: "$.components.securitySchemes"
+    then:
+      function: truthy
+
+  cloudrf-apikey-header-name:
+    description: The CloudRF API key is delivered via the `key` HTTP header.
+    severity: warn
+    given: "$.components.securitySchemes[?(@.type=='apiKey')]"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            in:
+              const: "header"
+            name:
+              const: "key"
+          required: ["in", "name"]
+
+  cloudrf-operation-id:
+    description: Every operation must declare a unique operationId.
+    severity: error
+    given: "$.paths[*][get,post,put,patch,delete]"
+    then:
+      field: operationId
+      function: truthy
+
+  cloudrf-operation-tags:
+    description: Every operation must declare at least one tag.
+    severity: warn
+    given: "$.paths[*][get,post,put,patch,delete]"
+    then:
+      field: tags
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          minItems: 1
+
+  cloudrf-operation-summary:
+    description: Every operation must include a short summary.
+    severity: warn
+    given: "$.paths[*][get,post,put,patch,delete]"
+    then:
+      field: summary
+      function: truthy
+
+  cloudrf-error-responses:
+    description: Mutating operations should declare 4xx error responses.
+    severity: warn
+    given: "$.paths[*][post,put,patch,delete].responses"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          anyOf:
+            - required: ["400"]
+            - required: ["401"]
+            - required: ["403"]
+            - required: ["404"]

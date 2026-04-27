@@ -1,47 +1,53 @@
 # CloudRF (cloudrf)
-CloudRF is a radio frequency (RF) propagation and signal modeling platform that provides APIs for RF analysis, coverage mapping, and wireless network planning.
 
-**URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/cloudrf/refs/heads/main/apis.yml)
+CloudRF is a radio frequency (RF) propagation, coverage modeling, and wireless network planning service. The HTTPS REST API at `api.cloudrf.com` covers point-to-multipoint coverage heatmaps, point-to-point path analysis, mesh networks, multisite, HF point-to-multipoint and point-to-point analysis, 3D coverage, satellite modeling, interference detection, geo-location of signals, archive and export of calculations, clutter and noise data management, account metrics, and reusable templates. Authentication is by API key passed as the `key` HTTP header.
+
+**APIs.json:** [apis.yml](https://raw.githubusercontent.com/api-evangelist/cloudrf/refs/heads/main/apis.yml)
 
 ## Scope
 
-- **Type:** Index 
-- **Position:** Consuming 
-- **Access:** 3rd-Party 
+- **Type:** Index
+- **x-type:** company
+- **Company:** CloudRF (Farrant Consulting Ltd.)
+- **Position:** Consumer
+- **Access:** 3rd-Party
 
-## Tags:
+## Tags
 
- - RF, Radio Frequency, Signal Analysis, Telecommunications
-
-## Timestamps
-
-- **Created:** 2024-07-02 
-- **Modified:** 2026-03-16 
+Coverage Modeling, HF Propagation, Mesh Network, Radio Frequency, RF, Satellite, Signal Analysis, Telecommunications, Wireless Planning
 
 ## APIs
 
 ### CloudRF API
-CloudRF API provides access to RF propagation modeling and signal analysis capabilities.
+Public REST API for RF propagation, coverage modeling, mesh and multisite analysis, HF analysis, 3D and satellite modeling, interference detection, signal geo-location, archive/export, clutter and noise data, and reusable templates. Authentication is via the `key` HTTP header.
 
-**Human URL:** [https://cloudrf.com/documentation/developer/swagger-ui/](https://cloudrf.com/documentation/developer/swagger-ui/)
+- [Developer Documentation](https://cloudrf.com/documentation/developer/)
+- [Swagger UI](https://cloudrf.com/documentation/developer/swagger-ui/)
+- [OpenAPI](openapi/cloudrf-openapi.yml)
+- [Code Samples](https://github.com/Cloud-RF/CloudRF-API-clients)
 
-
-#### Tags:
-
- - RF, Signal Analysis
-
-#### Properties
-
-- [Documentation](https://cloudrf.com/documentation/developer/swagger-ui/)
+### Operations Summary
+- **Create:** `/area`, `/path`, `/points`, `/multilink`, `/multisite`, `/hf`, `/hf-path`
+- **Analyse:** `/best-site`, `/best-server`, `/merge`, `/interference`, `/locate`
+- **3D:** `/3d`, `/3d-upload`
+- **Manage:** `/archive`, `/archive/delete`, `/network/delete`, `/export`, `/clutter`, `/clutter/delete`, `/noise`, `/noise-average`, `/noise/map`, `/noise/delete`
+- **Account:** `/account/metrics`
+- **Template:** `/template` (GET/POST)
+- **Satellite:** `/satellite`
 
 ## Common Properties
 
 - [Website](https://cloudrf.com/)
 - [Documentation](https://cloudrf.com/documentation/)
-- [Privacy Policy](https://cloudrf.com/privacy)
+- [Developer Documentation](https://cloudrf.com/documentation/developer/)
+- [API Reference (Swagger UI)](https://cloudrf.com/documentation/developer/swagger-ui/)
+- [Code Samples](https://github.com/Cloud-RF/CloudRF-API-clients)
+- [OpenAPI](openapi/cloudrf-openapi.yml)
+- [JSON-LD](json-ld/cloudrf-context.jsonld)
+- [Spectral](rules/cloudrf-rules.yml)
+- [Naftiko Capabilities](capabilities/cloudrf-capabilities.yml)
 
 ## Maintainers
 
-**FN:** Kin Lane
-
-**Email:** kin@apievangelist.com
+- **FN:** Kin Lane
+- **Email:** kinlane@gmail.com

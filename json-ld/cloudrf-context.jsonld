@@ -1,0 +1,87 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "crf": "https://cloudrf.com/ns/",
+    "schema": "https://schema.org/",
+    "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+
+    "Site": {
+      "@id": "crf:Site",
+      "@context": {
+        "id": "schema:identifier",
+        "name": "schema:name",
+        "lat": "geo:lat",
+        "lon": "geo:long",
+        "alt": "schema:elevation",
+        "frequency": "crf:frequency",
+        "txw": "crf:transmitterPowerWatts",
+        "antenna": "crf:antenna"
+      }
+    },
+
+    "Calculation": {
+      "@id": "crf:Calculation",
+      "@context": {
+        "id": "schema:identifier",
+        "type": "crf:calculationType",
+        "site": "crf:Site",
+        "createdAt": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        },
+        "resolution": "crf:resolution",
+        "model": "crf:propagationModel"
+      }
+    },
+
+    "Antenna": {
+      "@id": "crf:Antenna",
+      "@context": {
+        "id": "schema:identifier",
+        "name": "schema:name",
+        "gain": "crf:gainDbi",
+        "polarization": "crf:polarization",
+        "azimuth": "crf:azimuth",
+        "tilt": "crf:tilt"
+      }
+    },
+
+    "Receiver": {
+      "@id": "crf:Receiver",
+      "@context": {
+        "lat": "geo:lat",
+        "lon": "geo:long",
+        "alt": "schema:elevation",
+        "rxg": "crf:receiverGainDbi",
+        "rxs": "crf:receiverSensitivityDbm"
+      }
+    },
+
+    "CoverageResult": {
+      "@id": "crf:CoverageResult",
+      "@context": {
+        "id": "schema:identifier",
+        "calculationId": "crf:calculationId",
+        "format": "schema:encodingFormat",
+        "url": "schema:url",
+        "bounds": "crf:bounds"
+      }
+    },
+
+    "NoiseMeasurement": {
+      "@id": "crf:NoiseMeasurement",
+      "@context": {
+        "lat": "geo:lat",
+        "lon": "geo:long",
+        "frequency": "crf:frequency",
+        "noiseFloor": "crf:noiseFloorDbm",
+        "timestamp": {
+          "@id": "dcterms:date",
+          "@type": "xsd:dateTime"
+        }
+      }
+    }
+  }
+}
