@@ -18,7 +18,7 @@ access: 3rd-Party
 created: '2024-07-02'
 modified: '2026-04-26'
 position: Consumer
-x-type: company
+kind: company
 x-company: CloudRF (Farrant Consulting Ltd.)
 description: >-
   CloudRF is a radio frequency (RF) propagation, coverage modeling, and
@@ -60,15 +60,15 @@ common:
     url: https://cloudrf.com/documentation/
   - type: Developer Documentation
     url: https://cloudrf.com/documentation/developer/
-  - type: API Reference
+  - type: APIReference
     url: https://cloudrf.com/documentation/developer/swagger-ui/
   - type: Code Samples
     url: https://github.com/Cloud-RF/CloudRF-API-clients
-  - type: Privacy Policy
+  - type: PrivacyPolicy
     url: https://cloudrf.com/privacy
   - type: OpenAPI
     url: openapi/cloudrf-openapi.yml
-  - type: JSON-LD
+  - type: JSONLD
     url: json-ld/cloudrf-context.jsonld
   - type: Spectral
     url: rules/cloudrf-rules.yml
