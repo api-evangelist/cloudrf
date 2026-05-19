@@ -1,0 +1,104 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: CloudRF API — 3D
+  description: 'CloudRF API — 3D. 2 operations. Lead operation: 3D coverage. Self-contained Naftiko capability covering one
+    Cloudrf business surface.'
+  tags:
+  - Cloudrf
+  - 3D
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    CLOUDRF_API_KEY: CLOUDRF_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cloudrf-3d
+    baseUri: https://api.cloudrf.com
+    description: CloudRF API — 3D business capability. Self-contained, no shared references.
+    resources:
+    - name: 3d
+      path: /3d
+      operations:
+      - name: create3d
+        method: POST
+        description: 3D coverage
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: 3d-upload
+      path: /3d-upload
+      operations:
+      - name: upload3dmodel
+        method: POST
+        description: Upload GLB model
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: apikey
+      key: key
+      value: '{{env.CLOUDRF_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: cloudrf-3d-rest
+    port: 8080
+    description: REST adapter for CloudRF API — 3D. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/3d
+      name: 3d
+      description: REST surface for 3d.
+      operations:
+      - method: POST
+        name: create3d
+        description: 3D coverage
+        call: cloudrf-3d.create3d
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/3d-upload
+      name: 3d-upload
+      description: REST surface for 3d-upload.
+      operations:
+      - method: POST
+        name: upload3dmodel
+        description: Upload GLB model
+        call: cloudrf-3d.upload3dmodel
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: cloudrf-3d-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for CloudRF API — 3D. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: 3d-coverage
+      description: 3D coverage
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-3d.create3d
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: upload-glb-model
+      description: Upload GLB model
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-3d.upload3dmodel
+      outputParameters:
+      - type: object
+        mapping: $.

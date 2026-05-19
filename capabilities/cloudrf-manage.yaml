@@ -1,0 +1,385 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: CloudRF API — Manage
+  description: 'CloudRF API — Manage. 11 operations. Lead operation: List archived calculations. Self-contained Naftiko capability
+    covering one Cloudrf business surface.'
+  tags:
+  - Cloudrf
+  - Manage
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    CLOUDRF_API_KEY: CLOUDRF_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cloudrf-manage
+    baseUri: https://api.cloudrf.com
+    description: CloudRF API — Manage business capability. Self-contained, no shared references.
+    resources:
+    - name: archive
+      path: /archive
+      operations:
+      - name: listarchive
+        method: GET
+        description: List archived calculations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: archive-delete
+      path: /archive/delete
+      operations:
+      - name: deletearchive
+        method: GET
+        description: Delete archived calculation
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: clutter
+      path: /clutter
+      operations:
+      - name: uploadclutter
+        method: POST
+        description: Upload clutter
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: listclutter
+        method: GET
+        description: List clutter
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: clutter-delete
+      path: /clutter/delete
+      operations:
+      - name: deleteclutter
+        method: GET
+        description: Delete clutter
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: export
+      path: /export
+      operations:
+      - name: exportcalculation
+        method: GET
+        description: Export calculation
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: network-delete
+      path: /network/delete
+      operations:
+      - name: deletenetwork
+        method: GET
+        description: Delete network
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: noise
+      path: /noise
+      operations:
+      - name: submitnoise
+        method: POST
+        description: Submit noise measurements
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: noise-average
+      path: /noise-average
+      operations:
+      - name: noiseaverage
+        method: POST
+        description: 24-hour average noise
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: noise-delete
+      path: /noise/delete
+      operations:
+      - name: deletenoise
+        method: POST
+        description: Delete noise data
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: noise-map
+      path: /noise/map
+      operations:
+      - name: noisemap
+        method: GET
+        description: Noise database map
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: apikey
+      key: key
+      value: '{{env.CLOUDRF_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: cloudrf-manage-rest
+    port: 8080
+    description: REST adapter for CloudRF API — Manage. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/archive
+      name: archive
+      description: REST surface for archive.
+      operations:
+      - method: GET
+        name: listarchive
+        description: List archived calculations
+        call: cloudrf-manage.listarchive
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/archive/delete
+      name: archive-delete
+      description: REST surface for archive-delete.
+      operations:
+      - method: GET
+        name: deletearchive
+        description: Delete archived calculation
+        call: cloudrf-manage.deletearchive
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/clutter
+      name: clutter
+      description: REST surface for clutter.
+      operations:
+      - method: POST
+        name: uploadclutter
+        description: Upload clutter
+        call: cloudrf-manage.uploadclutter
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: listclutter
+        description: List clutter
+        call: cloudrf-manage.listclutter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/clutter/delete
+      name: clutter-delete
+      description: REST surface for clutter-delete.
+      operations:
+      - method: GET
+        name: deleteclutter
+        description: Delete clutter
+        call: cloudrf-manage.deleteclutter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/export
+      name: export
+      description: REST surface for export.
+      operations:
+      - method: GET
+        name: exportcalculation
+        description: Export calculation
+        call: cloudrf-manage.exportcalculation
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/network/delete
+      name: network-delete
+      description: REST surface for network-delete.
+      operations:
+      - method: GET
+        name: deletenetwork
+        description: Delete network
+        call: cloudrf-manage.deletenetwork
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/noise
+      name: noise
+      description: REST surface for noise.
+      operations:
+      - method: POST
+        name: submitnoise
+        description: Submit noise measurements
+        call: cloudrf-manage.submitnoise
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/noise-average
+      name: noise-average
+      description: REST surface for noise-average.
+      operations:
+      - method: POST
+        name: noiseaverage
+        description: 24-hour average noise
+        call: cloudrf-manage.noiseaverage
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/noise/delete
+      name: noise-delete
+      description: REST surface for noise-delete.
+      operations:
+      - method: POST
+        name: deletenoise
+        description: Delete noise data
+        call: cloudrf-manage.deletenoise
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/noise/map
+      name: noise-map
+      description: REST surface for noise-map.
+      operations:
+      - method: GET
+        name: noisemap
+        description: Noise database map
+        call: cloudrf-manage.noisemap
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: cloudrf-manage-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for CloudRF API — Manage. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-archived-calculations
+      description: List archived calculations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: cloudrf-manage.listarchive
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-archived-calculation
+      description: Delete archived calculation
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: cloudrf-manage.deletearchive
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: upload-clutter
+      description: Upload clutter
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-manage.uploadclutter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-clutter
+      description: List clutter
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: cloudrf-manage.listclutter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-clutter
+      description: Delete clutter
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: cloudrf-manage.deleteclutter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: export-calculation
+      description: Export calculation
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: cloudrf-manage.exportcalculation
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-network
+      description: Delete network
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: cloudrf-manage.deletenetwork
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: submit-noise-measurements
+      description: Submit noise measurements
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-manage.submitnoise
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: 24-hour-average-noise
+      description: 24-hour average noise
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-manage.noiseaverage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-noise-data
+      description: Delete noise data
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-manage.deletenoise
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: noise-database-map
+      description: Noise database map
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: cloudrf-manage.noisemap
+      outputParameters:
+      - type: object
+        mapping: $.

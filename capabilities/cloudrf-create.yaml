@@ -1,0 +1,264 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: CloudRF API — Create
+  description: 'CloudRF API — Create. 7 operations. Lead operation: Multipoint coverage heatmap. Self-contained Naftiko capability
+    covering one Cloudrf business surface.'
+  tags:
+  - Cloudrf
+  - Create
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    CLOUDRF_API_KEY: CLOUDRF_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cloudrf-create
+    baseUri: https://api.cloudrf.com
+    description: CloudRF API — Create business capability. Self-contained, no shared references.
+    resources:
+    - name: area
+      path: /area
+      operations:
+      - name: createarea
+        method: POST
+        description: Multipoint coverage heatmap
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: hf
+      path: /hf
+      operations:
+      - name: createhf
+        method: POST
+        description: HF point-to-multipoint
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: hf-path
+      path: /hf-path
+      operations:
+      - name: createhfpath
+        method: POST
+        description: HF point-to-point
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: multilink
+      path: /multilink
+      operations:
+      - name: createmultilink
+        method: POST
+        description: Mesh network
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: multisite
+      path: /multisite
+      operations:
+      - name: createmultisite
+        method: POST
+        description: Multiple multipoint coverage heatmaps
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: path
+      path: /path
+      operations:
+      - name: createpath
+        method: POST
+        description: Point-to-point link
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: points
+      path: /points
+      operations:
+      - name: createpoints
+        method: POST
+        description: Many transmitters to one receiver
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: apikey
+      key: key
+      value: '{{env.CLOUDRF_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: cloudrf-create-rest
+    port: 8080
+    description: REST adapter for CloudRF API — Create. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/area
+      name: area
+      description: REST surface for area.
+      operations:
+      - method: POST
+        name: createarea
+        description: Multipoint coverage heatmap
+        call: cloudrf-create.createarea
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/hf
+      name: hf
+      description: REST surface for hf.
+      operations:
+      - method: POST
+        name: createhf
+        description: HF point-to-multipoint
+        call: cloudrf-create.createhf
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/hf-path
+      name: hf-path
+      description: REST surface for hf-path.
+      operations:
+      - method: POST
+        name: createhfpath
+        description: HF point-to-point
+        call: cloudrf-create.createhfpath
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/multilink
+      name: multilink
+      description: REST surface for multilink.
+      operations:
+      - method: POST
+        name: createmultilink
+        description: Mesh network
+        call: cloudrf-create.createmultilink
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/multisite
+      name: multisite
+      description: REST surface for multisite.
+      operations:
+      - method: POST
+        name: createmultisite
+        description: Multiple multipoint coverage heatmaps
+        call: cloudrf-create.createmultisite
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/path
+      name: path
+      description: REST surface for path.
+      operations:
+      - method: POST
+        name: createpath
+        description: Point-to-point link
+        call: cloudrf-create.createpath
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/points
+      name: points
+      description: REST surface for points.
+      operations:
+      - method: POST
+        name: createpoints
+        description: Many transmitters to one receiver
+        call: cloudrf-create.createpoints
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: cloudrf-create-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for CloudRF API — Create. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: multipoint-coverage-heatmap
+      description: Multipoint coverage heatmap
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-create.createarea
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: hf-point-multipoint
+      description: HF point-to-multipoint
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-create.createhf
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: hf-point-point
+      description: HF point-to-point
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-create.createhfpath
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: mesh-network
+      description: Mesh network
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-create.createmultilink
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: multiple-multipoint-coverage-heatmaps
+      description: Multiple multipoint coverage heatmaps
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-create.createmultisite
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: point-point-link
+      description: Point-to-point link
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-create.createpath
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: many-transmitters-one-receiver
+      description: Many transmitters to one receiver
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-create.createpoints
+      outputParameters:
+      - type: object
+        mapping: $.

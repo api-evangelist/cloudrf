@@ -1,0 +1,72 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: CloudRF API — Account
+  description: 'CloudRF API — Account. 1 operations. Lead operation: API usage metrics. Self-contained Naftiko capability
+    covering one Cloudrf business surface.'
+  tags:
+  - Cloudrf
+  - Account
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    CLOUDRF_API_KEY: CLOUDRF_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cloudrf-account
+    baseUri: https://api.cloudrf.com
+    description: CloudRF API — Account business capability. Self-contained, no shared references.
+    resources:
+    - name: account-metrics
+      path: /account/metrics
+      operations:
+      - name: accountmetrics
+        method: GET
+        description: API usage metrics
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: apikey
+      key: key
+      value: '{{env.CLOUDRF_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: cloudrf-account-rest
+    port: 8080
+    description: REST adapter for CloudRF API — Account. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/account/metrics
+      name: account-metrics
+      description: REST surface for account-metrics.
+      operations:
+      - method: GET
+        name: accountmetrics
+        description: API usage metrics
+        call: cloudrf-account.accountmetrics
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: cloudrf-account-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for CloudRF API — Account. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: api-usage-metrics
+      description: API usage metrics
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: cloudrf-account.accountmetrics
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,97 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: CloudRF API — Template
+  description: 'CloudRF API — Template. 2 operations. Lead operation: List templates. Self-contained Naftiko capability covering
+    one Cloudrf business surface.'
+  tags:
+  - Cloudrf
+  - Template
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    CLOUDRF_API_KEY: CLOUDRF_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cloudrf-template
+    baseUri: https://api.cloudrf.com
+    description: CloudRF API — Template business capability. Self-contained, no shared references.
+    resources:
+    - name: template
+      path: /template
+      operations:
+      - name: listtemplates
+        method: GET
+        description: List templates
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createtemplate
+        method: POST
+        description: Create template
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: apikey
+      key: key
+      value: '{{env.CLOUDRF_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: cloudrf-template-rest
+    port: 8080
+    description: REST adapter for CloudRF API — Template. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/template
+      name: template
+      description: REST surface for template.
+      operations:
+      - method: GET
+        name: listtemplates
+        description: List templates
+        call: cloudrf-template.listtemplates
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createtemplate
+        description: Create template
+        call: cloudrf-template.createtemplate
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: cloudrf-template-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for CloudRF API — Template. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-templates
+      description: List templates
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: cloudrf-template.listtemplates
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-template
+      description: Create template
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: cloudrf-template.createtemplate
+      outputParameters:
+      - type: object
+        mapping: $.
