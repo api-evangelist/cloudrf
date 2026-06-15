@@ -1,0 +1,393 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CloudRF API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "key",
+      "value": "{{key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Create",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Multipoint coverage heatmap",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/area"
+          },
+          "docs": "Generate an omni-directional point-to-multipoint coverage heatmap from a transmitter."
+        },
+        {
+          "info": {
+            "name": "Point-to-point link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/path"
+          },
+          "docs": "Analyse a point-to-point RF link from a transmitter to a receiver."
+        },
+        {
+          "info": {
+            "name": "Many transmitters to one receiver",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/points"
+          },
+          "docs": "Test multiple transmitters against a single receiver."
+        },
+        {
+          "info": {
+            "name": "Mesh network",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/multilink"
+          },
+          "docs": "Analyse mesh network connectivity across many radios."
+        },
+        {
+          "info": {
+            "name": "Multiple multipoint coverage heatmaps",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/multisite"
+          },
+          "docs": "Generate coverage heatmaps for multiple sites in one request."
+        },
+        {
+          "info": {
+            "name": "HF point-to-multipoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/hf"
+          },
+          "docs": "HF (High Frequency) point-to-multipoint frequency analysis."
+        },
+        {
+          "info": {
+            "name": "HF point-to-point",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/hf-path"
+          },
+          "docs": "HF point-to-point frequency analysis (Tx to Rx)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Analyse",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Best site within an area",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/best-site"
+          },
+          "docs": "Identify the optimal transmitter site within a specified area."
+        },
+        {
+          "info": {
+            "name": "Merge calculations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/merge"
+          },
+          "docs": "Consolidate multiple sites into a super coverage layer."
+        },
+        {
+          "info": {
+            "name": "Network interference",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/interference"
+          },
+          "docs": "Detect interference between two networks."
+        },
+        {
+          "info": {
+            "name": "Best server for receiver",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/best-server"
+          },
+          "docs": "Locate the best server for a given receiver location."
+        },
+        {
+          "info": {
+            "name": "Geo-locate a signal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/locate"
+          },
+          "docs": "Geo-locate a signal source using a set of power measurements."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "3D",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "3D coverage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/3d"
+          },
+          "docs": "Calculate 3D coverage for a 3D model."
+        },
+        {
+          "info": {
+            "name": "Upload GLB model",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/3d-upload"
+          },
+          "docs": "Upload a GLB 3D model used for 3D coverage calculations."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Manage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List archived calculations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/archive"
+          },
+          "docs": "List previously run calculations from the archive."
+        },
+        {
+          "info": {
+            "name": "Delete archived calculation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/archive/delete"
+          },
+          "docs": "Remove a single calculation from the archive."
+        },
+        {
+          "info": {
+            "name": "Delete network",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/network/delete"
+          },
+          "docs": "Delete an entire network of calculations."
+        },
+        {
+          "info": {
+            "name": "Export calculation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/export"
+          },
+          "docs": "Export a calculation in a GIS-friendly format (TIFF, KMZ, SHP, JSON, ZIP)."
+        },
+        {
+          "info": {
+            "name": "List clutter",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/clutter"
+          },
+          "docs": "Retrieve private clutter data."
+        },
+        {
+          "info": {
+            "name": "Upload clutter",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/clutter"
+          },
+          "docs": "Upload clutter GeoJSON data for inclusion in calculations."
+        },
+        {
+          "info": {
+            "name": "Delete clutter",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/clutter/delete"
+          },
+          "docs": "Remove a clutter item."
+        },
+        {
+          "info": {
+            "name": "Submit noise measurements",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/noise"
+          },
+          "docs": "Submit noise measurements to the CloudRF noise database."
+        },
+        {
+          "info": {
+            "name": "24-hour average noise",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/noise-average"
+          },
+          "docs": "Compute a 24-hour average noise figure for a location."
+        },
+        {
+          "info": {
+            "name": "Noise database map",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/noise/map"
+          },
+          "docs": "Retrieve a tile of the noise database map."
+        },
+        {
+          "info": {
+            "name": "Delete noise data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/noise/delete"
+          },
+          "docs": "Remove noise data from the database."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "API usage metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/account/metrics"
+          },
+          "docs": "Retrieve API usage metrics for the authenticated account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Template",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/template"
+          },
+          "docs": "List custom user templates."
+        },
+        {
+          "info": {
+            "name": "Create template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/template"
+          },
+          "docs": "Store a new custom template."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Satellite",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Satellite coverage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/satellite"
+          },
+          "docs": "Model satellite coverage from satellite database parameters."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
