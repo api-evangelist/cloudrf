@@ -53,7 +53,7 @@ common:
     url: https://cloudrf.com/
   - type: Documentation
     url: https://cloudrf.com/documentation/
-  - type: Developer Documentation
+  - type: Documentation
     url: https://cloudrf.com/documentation/developer/
   - type: APIReference
     url: https://cloudrf.com/documentation/developer/swagger-ui/
