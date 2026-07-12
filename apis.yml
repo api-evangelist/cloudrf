@@ -47,6 +47,10 @@ apis:
       modeling, interference detection, signal geo-location, archive/export, clutter and noise data, and reusable
       templates. Authentication is via the `key` HTTP header.
 common:
+  - type: DomainSecurity
+    url: security/cloudrf-domain-security.yml
+  - type: Authentication
+    url: authentication/cloudrf-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/cloudrf
   - type: Website
@@ -67,6 +71,8 @@ common:
     url: json-ld/cloudrf-context.jsonld
   - type: Spectral
     url: rules/cloudrf-rules.yml
+  - type: Blog
+    url: https://cloudrf.com/feed/
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
