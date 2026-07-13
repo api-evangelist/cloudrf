@@ -1,0 +1,13 @@
+{
+  "repo": "cloudrf",
+  "feeds": [
+    {
+      "source": "https://cloudrf.com/feed/",
+      "feed_url": "https://cloudrf.com/feed/",
+      "title": "CloudRF",
+      "saved": 0
+    }
+  ],
+  "fetched": "2026-07-11T11:43:46Z",
+  "post_count": 2
+}
