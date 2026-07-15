@@ -47,6 +47,8 @@ apis:
       modeling, interference detection, signal geo-location, archive/export, clutter and noise data, and reusable
       templates. Authentication is via the `key` HTTP header.
 common:
+  - type: AgenticAccess
+    url: agentic-access/cloudrf-agentic-access.yml
   - type: DomainSecurity
     url: security/cloudrf-domain-security.yml
   - type: Authentication
