@@ -1,0 +1,81 @@
+openapi: 3.1.0
+info:
+  title: CloudRF 3D Analyse API
+  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
+  version: '1.0'
+  contact:
+    name: CloudRF
+    url: https://cloudrf.com
+  license:
+    name: Proprietary
+    url: https://cloudrf.com/terms
+servers:
+- url: https://api.cloudrf.com
+  description: Production
+- url: https://dev.cloudrf.com
+  description: Development
+security:
+- ApiKeyAuth: []
+tags:
+- name: Analyse
+  description: Analyse calculations including best-site, best-server, interference, merge, and signal location.
+paths:
+  /best-site:
+    post:
+      operationId: analyseBestSite
+      summary: Best site within an area
+      description: Identify the optimal transmitter site within a specified area.
+      tags:
+      - Analyse
+      responses:
+        '200':
+          description: Best-site result.
+  /merge:
+    get:
+      operationId: analyseMerge
+      summary: Merge calculations
+      description: Consolidate multiple sites into a super coverage layer.
+      tags:
+      - Analyse
+      responses:
+        '200':
+          description: Merged layer.
+  /interference:
+    post:
+      operationId: analyseInterference
+      summary: Network interference
+      description: Detect interference between two networks.
+      tags:
+      - Analyse
+      responses:
+        '200':
+          description: Interference report.
+  /best-server:
+    get:
+      operationId: analyseBestServer
+      summary: Best server for receiver
+      description: Locate the best server for a given receiver location.
+      tags:
+      - Analyse
+      responses:
+        '200':
+          description: Best server.
+  /locate:
+    post:
+      operationId: analyseLocate
+      summary: Geo-locate a signal
+      description: Geo-locate a signal source using a set of power measurements.
+      tags:
+      - Analyse
+      responses:
+        '200':
+          description: Estimated location.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: key
+externalDocs:
+  description: CloudRF Developer Documentation
+  url: https://cloudrf.com/documentation/developer/

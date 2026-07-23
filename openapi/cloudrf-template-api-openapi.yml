@@ -1,0 +1,50 @@
+openapi: 3.1.0
+info:
+  title: CloudRF 3D Template API
+  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
+  version: '1.0'
+  contact:
+    name: CloudRF
+    url: https://cloudrf.com
+  license:
+    name: Proprietary
+    url: https://cloudrf.com/terms
+servers:
+- url: https://api.cloudrf.com
+  description: Production
+- url: https://dev.cloudrf.com
+  description: Development
+security:
+- ApiKeyAuth: []
+tags:
+- name: Template
+  description: User and system templates.
+paths:
+  /template:
+    get:
+      operationId: listTemplates
+      summary: List templates
+      description: List custom user templates.
+      tags:
+      - Template
+      responses:
+        '200':
+          description: Templates.
+    post:
+      operationId: createTemplate
+      summary: Create template
+      description: Store a new custom template.
+      tags:
+      - Template
+      responses:
+        '200':
+          description: Created.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: key
+externalDocs:
+  description: CloudRF Developer Documentation
+  url: https://cloudrf.com/documentation/developer/

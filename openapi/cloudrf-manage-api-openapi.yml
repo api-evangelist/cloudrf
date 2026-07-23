@@ -1,0 +1,140 @@
+openapi: 3.1.0
+info:
+  title: CloudRF 3D Manage API
+  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
+  version: '1.0'
+  contact:
+    name: CloudRF
+    url: https://cloudrf.com
+  license:
+    name: Proprietary
+    url: https://cloudrf.com/terms
+servers:
+- url: https://api.cloudrf.com
+  description: Production
+- url: https://dev.cloudrf.com
+  description: Development
+security:
+- ApiKeyAuth: []
+tags:
+- name: Manage
+  description: Archive, export, clutter, and noise data management.
+paths:
+  /archive:
+    get:
+      operationId: listArchive
+      summary: List archived calculations
+      description: List previously run calculations from the archive.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Archive listing.
+  /archive/delete:
+    get:
+      operationId: deleteArchive
+      summary: Delete archived calculation
+      description: Remove a single calculation from the archive.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Deleted.
+  /network/delete:
+    get:
+      operationId: deleteNetwork
+      summary: Delete network
+      description: Delete an entire network of calculations.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Deleted.
+  /export:
+    get:
+      operationId: exportCalculation
+      summary: Export calculation
+      description: Export a calculation in a GIS-friendly format (TIFF, KMZ, SHP, JSON, ZIP).
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Export.
+  /clutter:
+    post:
+      operationId: uploadClutter
+      summary: Upload clutter
+      description: Upload clutter GeoJSON data for inclusion in calculations.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Uploaded.
+    get:
+      operationId: listClutter
+      summary: List clutter
+      description: Retrieve private clutter data.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Clutter listing.
+  /clutter/delete:
+    get:
+      operationId: deleteClutter
+      summary: Delete clutter
+      description: Remove a clutter item.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Deleted.
+  /noise:
+    post:
+      operationId: submitNoise
+      summary: Submit noise measurements
+      description: Submit noise measurements to the CloudRF noise database.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Submitted.
+  /noise-average:
+    post:
+      operationId: noiseAverage
+      summary: 24-hour average noise
+      description: Compute a 24-hour average noise figure for a location.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Average noise figure.
+  /noise/map:
+    get:
+      operationId: noiseMap
+      summary: Noise database map
+      description: Retrieve a tile of the noise database map.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Noise map.
+  /noise/delete:
+    post:
+      operationId: deleteNoise
+      summary: Delete noise data
+      description: Remove noise data from the database.
+      tags:
+      - Manage
+      responses:
+        '200':
+          description: Deleted.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: key
+externalDocs:
+  description: CloudRF Developer Documentation
+  url: https://cloudrf.com/documentation/developer/

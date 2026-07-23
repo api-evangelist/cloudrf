@@ -1,0 +1,41 @@
+openapi: 3.1.0
+info:
+  title: CloudRF 3D Satellite API
+  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
+  version: '1.0'
+  contact:
+    name: CloudRF
+    url: https://cloudrf.com
+  license:
+    name: Proprietary
+    url: https://cloudrf.com/terms
+servers:
+- url: https://api.cloudrf.com
+  description: Production
+- url: https://dev.cloudrf.com
+  description: Development
+security:
+- ApiKeyAuth: []
+tags:
+- name: Satellite
+  description: Satellite coverage modeling.
+paths:
+  /satellite:
+    post:
+      operationId: createSatellite
+      summary: Satellite coverage
+      description: Model satellite coverage from satellite database parameters.
+      tags:
+      - Satellite
+      responses:
+        '200':
+          description: Satellite coverage result.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: key
+externalDocs:
+  description: CloudRF Developer Documentation
+  url: https://cloudrf.com/documentation/developer/

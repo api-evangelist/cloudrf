@@ -1,0 +1,121 @@
+openapi: 3.1.0
+info:
+  title: CloudRF 3D Create API
+  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
+  version: '1.0'
+  contact:
+    name: CloudRF
+    url: https://cloudrf.com
+  license:
+    name: Proprietary
+    url: https://cloudrf.com/terms
+servers:
+- url: https://api.cloudrf.com
+  description: Production
+- url: https://dev.cloudrf.com
+  description: Development
+security:
+- ApiKeyAuth: []
+tags:
+- name: Create
+  description: Create coverage, path, multipoint, mesh, and HF calculations.
+paths:
+  /area:
+    post:
+      operationId: createArea
+      summary: Multipoint coverage heatmap
+      description: Generate an omni-directional point-to-multipoint coverage heatmap from a transmitter.
+      tags:
+      - Create
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /path:
+    post:
+      operationId: createPath
+      summary: Point-to-point link
+      description: Analyse a point-to-point RF link from a transmitter to a receiver.
+      tags:
+      - Create
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /points:
+    post:
+      operationId: createPoints
+      summary: Many transmitters to one receiver
+      description: Test multiple transmitters against a single receiver.
+      tags:
+      - Create
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /multilink:
+    post:
+      operationId: createMultilink
+      summary: Mesh network
+      description: Analyse mesh network connectivity across many radios.
+      tags:
+      - Create
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /multisite:
+    post:
+      operationId: createMultisite
+      summary: Multiple multipoint coverage heatmaps
+      description: Generate coverage heatmaps for multiple sites in one request.
+      tags:
+      - Create
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /hf:
+    post:
+      operationId: createHf
+      summary: HF point-to-multipoint
+      description: HF (High Frequency) point-to-multipoint frequency analysis.
+      tags:
+      - Create
+      responses:
+        '200':
+          description: Calculation submitted.
+  /hf-path:
+    post:
+      operationId: createHfPath
+      summary: HF point-to-point
+      description: HF point-to-point frequency analysis (Tx to Rx).
+      tags:
+      - Create
+      responses:
+        '200':
+          description: Calculation submitted.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: key
+externalDocs:
+  description: CloudRF Developer Documentation
+  url: https://cloudrf.com/documentation/developer/
