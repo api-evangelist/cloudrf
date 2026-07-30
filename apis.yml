@@ -12,7 +12,20 @@ tags:
   - Telecommunications
   - Wireless Planning
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cloudrf.png
 access: 3rd-Party
 created: '2024-07-02'
 modified: '2026-05-19'
@@ -26,26 +39,112 @@ description: >-
   detection, geo-location of signals, archive and export of calculations, clutter and noise data management, account
   metrics, and reusable templates. Authentication is by API key passed as the `key` HTTP header.
 apis:
-  - aid: cloudrf:cloudrf-api
-    name: CloudRF API
-    tags:
-      - Coverage Modeling
-      - RF
-      - Signal Analysis
-    humanURL: https://cloudrf.com/documentation/developer/
-    properties:
-      - url: https://cloudrf.com/documentation/developer/
-        type: Documentation
-      - url: https://cloudrf.com/documentation/developer/swagger-ui/
-        type: Reference
-      - url: openapi/cloudrf-openapi.yml
-        type: OpenAPI
-      - url: https://github.com/Cloud-RF/CloudRF-API-clients
-        type: Code Samples
-    description: >-
-      Public REST API for RF propagation, coverage modeling, mesh and multisite analysis, HF analysis, 3D and satellite
-      modeling, interference detection, signal geo-location, archive/export, clutter and noise data, and reusable
-      templates. Authentication is via the `key` HTTP header.
+- aid: cloudrf:cloudrf-3d-api
+  name: CloudRF 3D API
+  description: 3D coverage and model upload operations.
+  humanURL: https://cloudrf.com/documentation/developer/
+  tags:
+  - 3D
+  properties:
+  - type: OpenAPI
+    url: openapi/cloudrf-3d-api-openapi.yml
+  - type: Documentation
+    url: https://cloudrf.com/documentation/developer/
+  - type: Reference
+    url: https://cloudrf.com/documentation/developer/swagger-ui/
+  - type: Code Samples
+    url: https://github.com/Cloud-RF/CloudRF-API-clients
+- aid: cloudrf:cloudrf-account-api
+  name: CloudRF Account API
+  description: Account-level resources such as metrics.
+  humanURL: https://cloudrf.com/documentation/developer/
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/cloudrf-account-api-openapi.yml
+  - type: Documentation
+    url: https://cloudrf.com/documentation/developer/
+  - type: Reference
+    url: https://cloudrf.com/documentation/developer/swagger-ui/
+  - type: Code Samples
+    url: https://github.com/Cloud-RF/CloudRF-API-clients
+- aid: cloudrf:cloudrf-analyse-api
+  name: CloudRF Analyse API
+  description: >-
+    Analyse calculations including best-site, best-server, interference, merge, and signal location.
+  humanURL: https://cloudrf.com/documentation/developer/
+  tags:
+  - Analyse
+  properties:
+  - type: OpenAPI
+    url: openapi/cloudrf-analyse-api-openapi.yml
+  - type: Documentation
+    url: https://cloudrf.com/documentation/developer/
+  - type: Reference
+    url: https://cloudrf.com/documentation/developer/swagger-ui/
+  - type: Code Samples
+    url: https://github.com/Cloud-RF/CloudRF-API-clients
+- aid: cloudrf:cloudrf-create-api
+  name: CloudRF Create API
+  description: Create coverage, path, multipoint, mesh, and HF calculations.
+  humanURL: https://cloudrf.com/documentation/developer/
+  tags:
+  - Create
+  properties:
+  - type: OpenAPI
+    url: openapi/cloudrf-create-api-openapi.yml
+  - type: Documentation
+    url: https://cloudrf.com/documentation/developer/
+  - type: Reference
+    url: https://cloudrf.com/documentation/developer/swagger-ui/
+  - type: Code Samples
+    url: https://github.com/Cloud-RF/CloudRF-API-clients
+- aid: cloudrf:cloudrf-manage-api
+  name: CloudRF Manage API
+  description: Archive, export, clutter, and noise data management.
+  humanURL: https://cloudrf.com/documentation/developer/
+  tags:
+  - Manage
+  properties:
+  - type: OpenAPI
+    url: openapi/cloudrf-manage-api-openapi.yml
+  - type: Documentation
+    url: https://cloudrf.com/documentation/developer/
+  - type: Reference
+    url: https://cloudrf.com/documentation/developer/swagger-ui/
+  - type: Code Samples
+    url: https://github.com/Cloud-RF/CloudRF-API-clients
+- aid: cloudrf:cloudrf-satellite-api
+  name: CloudRF Satellite API
+  description: Satellite coverage modeling.
+  humanURL: https://cloudrf.com/documentation/developer/
+  tags:
+  - Satellite
+  properties:
+  - type: OpenAPI
+    url: openapi/cloudrf-satellite-api-openapi.yml
+  - type: Documentation
+    url: https://cloudrf.com/documentation/developer/
+  - type: Reference
+    url: https://cloudrf.com/documentation/developer/swagger-ui/
+  - type: Code Samples
+    url: https://github.com/Cloud-RF/CloudRF-API-clients
+- aid: cloudrf:cloudrf-template-api
+  name: CloudRF Template API
+  description: User and system templates.
+  humanURL: https://cloudrf.com/documentation/developer/
+  tags:
+  - Template
+  properties:
+  - type: OpenAPI
+    url: openapi/cloudrf-template-api-openapi.yml
+  - type: Documentation
+    url: https://cloudrf.com/documentation/developer/
+  - type: Reference
+    url: https://cloudrf.com/documentation/developer/swagger-ui/
+  - type: Code Samples
+    url: https://github.com/Cloud-RF/CloudRF-API-clients
 common:
   - type: AgenticAccess
     url: agentic-access/cloudrf-agentic-access.yml
