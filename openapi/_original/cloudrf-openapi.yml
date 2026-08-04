@@ -1,0 +1,328 @@
+openapi: 3.1.0
+info:
+  title: CloudRF API
+  description: >-
+    Public REST API for RF propagation modeling, coverage analysis, mesh
+    and multisite planning, HF propagation, 3D coverage, satellite
+    modeling, interference detection, signal geo-location, archive and
+    export, clutter and noise data, and reusable templates. Operations,
+    paths, and methods are documented in the CloudRF developer guide and
+    Swagger UI.
+  version: '1.0'
+  contact:
+    name: CloudRF
+    url: https://cloudrf.com
+  license:
+    name: Proprietary
+    url: https://cloudrf.com/terms
+externalDocs:
+  description: CloudRF Developer Documentation
+  url: https://cloudrf.com/documentation/developer/
+servers:
+  - url: https://api.cloudrf.com
+    description: Production
+  - url: https://dev.cloudrf.com
+    description: Development
+security:
+  - ApiKeyAuth: []
+tags:
+  - name: Create
+    description: Create coverage, path, multipoint, mesh, and HF calculations.
+  - name: Analyse
+    description: Analyse calculations including best-site, best-server, interference, merge, and signal location.
+  - name: 3D
+    description: 3D coverage and model upload operations.
+  - name: Manage
+    description: Archive, export, clutter, and noise data management.
+  - name: Account
+    description: Account-level resources such as metrics.
+  - name: Template
+    description: User and system templates.
+  - name: Satellite
+    description: Satellite coverage modeling.
+paths:
+  /area:
+    post:
+      operationId: createArea
+      summary: Multipoint coverage heatmap
+      description: Generate an omni-directional point-to-multipoint coverage heatmap from a transmitter.
+      tags: [Create]
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /path:
+    post:
+      operationId: createPath
+      summary: Point-to-point link
+      description: Analyse a point-to-point RF link from a transmitter to a receiver.
+      tags: [Create]
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /points:
+    post:
+      operationId: createPoints
+      summary: Many transmitters to one receiver
+      description: Test multiple transmitters against a single receiver.
+      tags: [Create]
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /multilink:
+    post:
+      operationId: createMultilink
+      summary: Mesh network
+      description: Analyse mesh network connectivity across many radios.
+      tags: [Create]
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /multisite:
+    post:
+      operationId: createMultisite
+      summary: Multiple multipoint coverage heatmaps
+      description: Generate coverage heatmaps for multiple sites in one request.
+      tags: [Create]
+      responses:
+        '200':
+          description: Calculation submitted.
+        '401':
+          description: Missing or invalid API key.
+        '400':
+          description: Invalid parameters.
+  /hf:
+    post:
+      operationId: createHf
+      summary: HF point-to-multipoint
+      description: HF (High Frequency) point-to-multipoint frequency analysis.
+      tags: [Create]
+      responses:
+        '200':
+          description: Calculation submitted.
+  /hf-path:
+    post:
+      operationId: createHfPath
+      summary: HF point-to-point
+      description: HF point-to-point frequency analysis (Tx to Rx).
+      tags: [Create]
+      responses:
+        '200':
+          description: Calculation submitted.
+  /best-site:
+    post:
+      operationId: analyseBestSite
+      summary: Best site within an area
+      description: Identify the optimal transmitter site within a specified area.
+      tags: [Analyse]
+      responses:
+        '200':
+          description: Best-site result.
+  /merge:
+    get:
+      operationId: analyseMerge
+      summary: Merge calculations
+      description: Consolidate multiple sites into a super coverage layer.
+      tags: [Analyse]
+      responses:
+        '200':
+          description: Merged layer.
+  /interference:
+    post:
+      operationId: analyseInterference
+      summary: Network interference
+      description: Detect interference between two networks.
+      tags: [Analyse]
+      responses:
+        '200':
+          description: Interference report.
+  /best-server:
+    get:
+      operationId: analyseBestServer
+      summary: Best server for receiver
+      description: Locate the best server for a given receiver location.
+      tags: [Analyse]
+      responses:
+        '200':
+          description: Best server.
+  /locate:
+    post:
+      operationId: analyseLocate
+      summary: Geo-locate a signal
+      description: Geo-locate a signal source using a set of power measurements.
+      tags: [Analyse]
+      responses:
+        '200':
+          description: Estimated location.
+  /3d:
+    post:
+      operationId: create3d
+      summary: 3D coverage
+      description: Calculate 3D coverage for a 3D model.
+      tags: [3D]
+      responses:
+        '200':
+          description: 3D coverage result.
+  /3d-upload:
+    post:
+      operationId: upload3dModel
+      summary: Upload GLB model
+      description: Upload a GLB 3D model used for 3D coverage calculations.
+      tags: [3D]
+      responses:
+        '200':
+          description: Model uploaded.
+  /archive:
+    get:
+      operationId: listArchive
+      summary: List archived calculations
+      description: List previously run calculations from the archive.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Archive listing.
+  /archive/delete:
+    get:
+      operationId: deleteArchive
+      summary: Delete archived calculation
+      description: Remove a single calculation from the archive.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Deleted.
+  /network/delete:
+    get:
+      operationId: deleteNetwork
+      summary: Delete network
+      description: Delete an entire network of calculations.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Deleted.
+  /export:
+    get:
+      operationId: exportCalculation
+      summary: Export calculation
+      description: Export a calculation in a GIS-friendly format (TIFF, KMZ, SHP, JSON, ZIP).
+      tags: [Manage]
+      responses:
+        '200':
+          description: Export.
+  /clutter:
+    post:
+      operationId: uploadClutter
+      summary: Upload clutter
+      description: Upload clutter GeoJSON data for inclusion in calculations.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Uploaded.
+    get:
+      operationId: listClutter
+      summary: List clutter
+      description: Retrieve private clutter data.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Clutter listing.
+  /clutter/delete:
+    get:
+      operationId: deleteClutter
+      summary: Delete clutter
+      description: Remove a clutter item.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Deleted.
+  /noise:
+    post:
+      operationId: submitNoise
+      summary: Submit noise measurements
+      description: Submit noise measurements to the CloudRF noise database.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Submitted.
+  /noise-average:
+    post:
+      operationId: noiseAverage
+      summary: 24-hour average noise
+      description: Compute a 24-hour average noise figure for a location.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Average noise figure.
+  /noise/map:
+    get:
+      operationId: noiseMap
+      summary: Noise database map
+      description: Retrieve a tile of the noise database map.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Noise map.
+  /noise/delete:
+    post:
+      operationId: deleteNoise
+      summary: Delete noise data
+      description: Remove noise data from the database.
+      tags: [Manage]
+      responses:
+        '200':
+          description: Deleted.
+  /account/metrics:
+    get:
+      operationId: accountMetrics
+      summary: API usage metrics
+      description: Retrieve API usage metrics for the authenticated account.
+      tags: [Account]
+      responses:
+        '200':
+          description: Metrics.
+  /template:
+    get:
+      operationId: listTemplates
+      summary: List templates
+      description: List custom user templates.
+      tags: [Template]
+      responses:
+        '200':
+          description: Templates.
+    post:
+      operationId: createTemplate
+      summary: Create template
+      description: Store a new custom template.
+      tags: [Template]
+      responses:
+        '200':
+          description: Created.
+  /satellite:
+    post:
+      operationId: createSatellite
+      summary: Satellite coverage
+      description: Model satellite coverage from satellite database parameters.
+      tags: [Satellite]
+      responses:
+        '200':
+          description: Satellite coverage result.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: key

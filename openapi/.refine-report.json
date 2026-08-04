@@ -1,0 +1,26 @@
+{
+  "provider": "cloudrf",
+  "sources": [
+    "cloudrf-3d-api-openapi.yml",
+    "cloudrf-account-api-openapi.yml",
+    "cloudrf-analyse-api-openapi.yml",
+    "cloudrf-create-api-openapi.yml",
+    "cloudrf-manage-api-openapi.yml",
+    "cloudrf-satellite-api-openapi.yml",
+    "cloudrf-template-api-openapi.yml"
+  ],
+  "outputs": [
+    "cloudrf-3d-api-openapi.yml",
+    "cloudrf-account-api-openapi.yml",
+    "cloudrf-analyse-api-openapi.yml",
+    "cloudrf-create-api-openapi.yml",
+    "cloudrf-manage-api-openapi.yml",
+    "cloudrf-satellite-api-openapi.yml",
+    "cloudrf-template-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
