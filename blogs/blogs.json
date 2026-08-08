@@ -5,9 +5,10 @@
       "source": "https://cloudrf.com/feed/",
       "feed_url": "https://cloudrf.com/feed/",
       "title": "CloudRF",
-      "saved": 1
+      "saved": 0,
+      "error": "parse_failed"
     }
   ],
-  "fetched": "2026-08-01T15:38:58Z",
+  "fetched": "2026-08-06T13:56:59Z",
   "post_count": 3
 }
