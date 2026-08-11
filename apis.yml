@@ -167,7 +167,7 @@ common:
   - type: PrivacyPolicy
     url: https://cloudrf.com/privacy
   - type: OpenAPI
-    url: openapi/cloudrf-openapi.yml
+    url: openapi/_original/cloudrf-openapi.yml
   - type: JSONLD
     url: json-ld/cloudrf-context.jsonld
   - type: Spectral
