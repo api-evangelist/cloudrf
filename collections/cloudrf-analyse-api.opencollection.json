@@ -1,0 +1,81 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CloudRF 3D Analyse API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "key",
+      "value": "{{key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Analyse",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Best site within an area",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/best-site"
+          },
+          "docs": "Identify the optimal transmitter site within a specified area."
+        },
+        {
+          "info": {
+            "name": "Merge calculations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/merge"
+          },
+          "docs": "Consolidate multiple sites into a super coverage layer."
+        },
+        {
+          "info": {
+            "name": "Network interference",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/interference"
+          },
+          "docs": "Detect interference between two networks."
+        },
+        {
+          "info": {
+            "name": "Best server for receiver",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/best-server"
+          },
+          "docs": "Locate the best server for a given receiver location."
+        },
+        {
+          "info": {
+            "name": "Geo-locate a signal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/locate"
+          },
+          "docs": "Geo-locate a signal source using a set of power measurements."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

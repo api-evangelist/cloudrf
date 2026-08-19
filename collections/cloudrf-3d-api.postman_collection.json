@@ -1,0 +1,185 @@
+{
+  "item": [
+    {
+      "id": "f34d589b-9015-413d-bb28-e8bc1342dac9",
+      "name": "3D",
+      "description": {
+        "content": "3D coverage and model upload operations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a35dbf26-95a5-4db2-a3dd-7f187660bff7",
+          "name": "3D coverage",
+          "request": {
+            "name": "3D coverage",
+            "description": {
+              "content": "Calculate 3D coverage for a 3D model.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "3d"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b5049205-2595-4394-8550-9957a9ed2a39",
+              "name": "3D coverage result.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "3d"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "de00a4cc-693a-415c-8548-ef106683c837",
+          "name": "Upload GLB model",
+          "request": {
+            "name": "Upload GLB model",
+            "description": {
+              "content": "Upload a GLB 3D model used for 3D coverage calculations.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "3d-upload"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3ac5d196-a7c7-4a5a-9a1d-874181a7fdb2",
+              "name": "Model uploaded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "3d-upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.cloudrf.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6bbf75c4-cb2c-47a9-938b-6f3142391f01",
+    "name": "CloudRF 3D API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.\n\nContact Support:\n Name: CloudRF",
+      "type": "text/plain"
+    }
+  }
+}

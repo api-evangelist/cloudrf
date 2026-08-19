@@ -1,0 +1,389 @@
+{
+  "item": [
+    {
+      "id": "918724f3-df26-4b8b-8e8c-2fcf85fc6679",
+      "name": "Analyse",
+      "description": {
+        "content": "Analyse calculations including best-site, best-server, interference, merge, and signal location.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "235c1b84-215a-4510-9ab5-90066ed2147b",
+          "name": "Best site within an area",
+          "request": {
+            "name": "Best site within an area",
+            "description": {
+              "content": "Identify the optimal transmitter site within a specified area.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "best-site"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "25855667-4d61-420b-b531-0ba289889803",
+              "name": "Best-site result.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "best-site"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6a6910ad-0dfd-4739-a8cc-c9b08b658db7",
+          "name": "Merge calculations",
+          "request": {
+            "name": "Merge calculations",
+            "description": {
+              "content": "Consolidate multiple sites into a super coverage layer.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "merge"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6dfb2a89-7ac0-456c-a077-378b8c63fc1d",
+              "name": "Merged layer.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "merge"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a65fe3d9-abdf-4d53-9609-fcbd82efe0a2",
+          "name": "Network interference",
+          "request": {
+            "name": "Network interference",
+            "description": {
+              "content": "Detect interference between two networks.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "interference"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fc9eb615-4ab0-43ac-aef7-a241f34a9168",
+              "name": "Interference report.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "interference"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "65e6c216-2d5f-4f83-b6d7-3e0166d4bc9c",
+          "name": "Best server for receiver",
+          "request": {
+            "name": "Best server for receiver",
+            "description": {
+              "content": "Locate the best server for a given receiver location.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "best-server"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "adf301df-087a-46f3-937b-7dfa96711aff",
+              "name": "Best server.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "best-server"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c96c328d-8b88-4036-b883-ed7ed44bafe2",
+          "name": "Geo-locate a signal",
+          "request": {
+            "name": "Geo-locate a signal",
+            "description": {
+              "content": "Geo-locate a signal source using a set of power measurements.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "locate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2e8f83da-5e79-4c0e-bcc4-204fef357434",
+              "name": "Estimated location.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "locate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.cloudrf.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f76a12be-f7fa-4ded-9770-a6ba563a334e",
+    "name": "CloudRF 3D Analyse API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.\n\nContact Support:\n Name: CloudRF",
+      "type": "text/plain"
+    }
+  }
+}

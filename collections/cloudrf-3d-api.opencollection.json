@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CloudRF 3D API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "key",
+      "value": "{{key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "3D",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "3D coverage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/3d"
+          },
+          "docs": "Calculate 3D coverage for a 3D model."
+        },
+        {
+          "info": {
+            "name": "Upload GLB model",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/3d-upload"
+          },
+          "docs": "Upload a GLB 3D model used for 3D coverage calculations."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

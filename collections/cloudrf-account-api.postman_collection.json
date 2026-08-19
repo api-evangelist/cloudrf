@@ -1,0 +1,119 @@
+{
+  "item": [
+    {
+      "id": "d1df5a96-6e0f-4347-9150-ba2347f9e9ce",
+      "name": "Account",
+      "description": {
+        "content": "Account-level resources such as metrics.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "864d6fa9-981a-41ca-87ac-c0efca8ecc4b",
+          "name": "API usage metrics",
+          "request": {
+            "name": "API usage metrics",
+            "description": {
+              "content": "Retrieve API usage metrics for the authenticated account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "account",
+                "metrics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "38aba801-ed83-4646-8864-1fb51d7c3a13",
+              "name": "Metrics.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    "metrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.cloudrf.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "1746b5d3-bafd-4a11-ba7d-d1c30bffbd48",
+    "name": "CloudRF 3D Account API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.\n\nContact Support:\n Name: CloudRF",
+      "type": "text/plain"
+    }
+  }
+}

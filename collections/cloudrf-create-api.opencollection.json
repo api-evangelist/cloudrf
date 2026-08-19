@@ -1,0 +1,103 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CloudRF 3D Create API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "key",
+      "value": "{{key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Create",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Multipoint coverage heatmap",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/area"
+          },
+          "docs": "Generate an omni-directional point-to-multipoint coverage heatmap from a transmitter."
+        },
+        {
+          "info": {
+            "name": "Point-to-point link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/path"
+          },
+          "docs": "Analyse a point-to-point RF link from a transmitter to a receiver."
+        },
+        {
+          "info": {
+            "name": "Many transmitters to one receiver",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/points"
+          },
+          "docs": "Test multiple transmitters against a single receiver."
+        },
+        {
+          "info": {
+            "name": "Mesh network",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/multilink"
+          },
+          "docs": "Analyse mesh network connectivity across many radios."
+        },
+        {
+          "info": {
+            "name": "Multiple multipoint coverage heatmaps",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/multisite"
+          },
+          "docs": "Generate coverage heatmaps for multiple sites in one request."
+        },
+        {
+          "info": {
+            "name": "HF point-to-multipoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/hf"
+          },
+          "docs": "HF (High Frequency) point-to-multipoint frequency analysis."
+        },
+        {
+          "info": {
+            "name": "HF point-to-point",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/hf-path"
+          },
+          "docs": "HF point-to-point frequency analysis (Tx to Rx)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

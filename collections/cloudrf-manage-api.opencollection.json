@@ -1,0 +1,147 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CloudRF 3D Manage API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "key",
+      "value": "{{key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Manage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List archived calculations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/archive"
+          },
+          "docs": "List previously run calculations from the archive."
+        },
+        {
+          "info": {
+            "name": "Delete archived calculation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/archive/delete"
+          },
+          "docs": "Remove a single calculation from the archive."
+        },
+        {
+          "info": {
+            "name": "Delete network",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/network/delete"
+          },
+          "docs": "Delete an entire network of calculations."
+        },
+        {
+          "info": {
+            "name": "Export calculation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/export"
+          },
+          "docs": "Export a calculation in a GIS-friendly format (TIFF, KMZ, SHP, JSON, ZIP)."
+        },
+        {
+          "info": {
+            "name": "List clutter",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/clutter"
+          },
+          "docs": "Retrieve private clutter data."
+        },
+        {
+          "info": {
+            "name": "Upload clutter",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/clutter"
+          },
+          "docs": "Upload clutter GeoJSON data for inclusion in calculations."
+        },
+        {
+          "info": {
+            "name": "Delete clutter",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/clutter/delete"
+          },
+          "docs": "Remove a clutter item."
+        },
+        {
+          "info": {
+            "name": "Submit noise measurements",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/noise"
+          },
+          "docs": "Submit noise measurements to the CloudRF noise database."
+        },
+        {
+          "info": {
+            "name": "24-hour average noise",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/noise-average"
+          },
+          "docs": "Compute a 24-hour average noise figure for a location."
+        },
+        {
+          "info": {
+            "name": "Noise database map",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cloudrf.com/noise/map"
+          },
+          "docs": "Retrieve a tile of the noise database map."
+        },
+        {
+          "info": {
+            "name": "Delete noise data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/noise/delete"
+          },
+          "docs": "Remove noise data from the database."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

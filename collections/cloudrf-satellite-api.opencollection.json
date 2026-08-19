@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CloudRF 3D Satellite API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "key",
+      "value": "{{key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Satellite",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Satellite coverage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.cloudrf.com/satellite"
+          },
+          "docs": "Model satellite coverage from satellite database parameters."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
