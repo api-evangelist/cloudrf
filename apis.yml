@@ -89,7 +89,8 @@ apis:
   name: CloudRF Create API
   description: Create coverage, path, multipoint, mesh, and HF calculations.
   humanURL: https://cloudrf.com/documentation/developer/
-  tags:
+  tags: []
+  tags_raw:
   - Create
   properties:
   - type: OpenAPI
