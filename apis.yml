@@ -158,6 +158,9 @@ apis:
   - type: CodeExamples
     url: https://github.com/Cloud-RF/CloudRF-API-clients
 common:
+  - type: CapabilityMap
+    url: capabilities/cloudrf-capability-edges.yml
+    name: CloudRF Business Capability Map
   - type: AgenticAccess
     url: agentic-access/cloudrf-agentic-access.yml
   - type: DomainSecurity

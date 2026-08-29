@@ -1,0 +1,47 @@
+slug: cloudrf
+provider: CloudRF
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Create
+  spec_file: cloudrf-create-api-openapi.yml
+  capability_id: BC-2610.20
+  capability_id_l1: BC-2610
+  capability_name: Network Coverage Planning
+  confidence: 0.8
+  evidence: POST /area createArea Multipoint coverage heatmap; POST /path createPath Point-to-point link;
+    POST /multilink createMultilink Mesh network
+  reason: Core RF propagation modelling operations produce coverage heatmaps and link/mesh predictions
+    — i.e. planning of geographic radio coverage and transport links, matching Network Coverage Planning.
+- tag: 3D
+  spec_file: cloudrf-3d-api-openapi.yml
+  capability_id: BC-2610.20
+  capability_id_l1: BC-2610
+  capability_name: Network Coverage Planning
+  confidence: 0.78
+  evidence: 'POST /3d create3d ''3D coverage''; vendor: ''RF propagation, coverage modeling, and wireless
+    network planning service'''
+  reason: The operation computes 3D RF coverage from propagation modelling, which is exactly planning
+    of geographic coverage for radio networks (Network Coverage Planning). Slight ambiguity with capacity/site
+    planning keeps it below 0.8.
+- tag: Analyse
+  spec_file: cloudrf-analyse-api-openapi.yml
+  capability_id: BC-2610
+  capability_id_l1: BC-2610
+  capability_name: Telecom Network Planning Management
+  confidence: 0.72
+  evidence: POST /best-site analyseBestSite Best site within an area; GET /best-server analyseBestServer
+    Best server for receiver; POST /interference analyseInterference Network interference
+  reason: Operations analyse candidate transmitter sites, best serving cell and inter-site interference
+    for a wireless network — design/dimensioning analytics that sit in telecom network planning. Mixed
+    sub-scope (site selection plus interference analysis) so no single L2 asserted.
