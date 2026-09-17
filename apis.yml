@@ -51,21 +51,6 @@ description: >-
   detection, geo-location of signals, archive and export of calculations, clutter and noise data management, account
   metrics, and reusable templates. Authentication is by API key passed as the `key` HTTP header.
 apis:
-- aid: cloudrf:cloudrf-3d-api
-  name: CloudRF 3D API
-  description: 3D coverage and model upload operations.
-  humanURL: https://cloudrf.com/documentation/developer/
-  tags:
-  - 3D
-  properties:
-  - type: OpenAPI
-    url: openapi/cloudrf-3d-api-openapi.yml
-  - type: Documentation
-    url: https://cloudrf.com/documentation/developer/
-  - type: Reference
-    url: https://cloudrf.com/documentation/developer/swagger-ui/
-  - type: CodeExamples
-    url: https://github.com/Cloud-RF/CloudRF-API-clients
 - aid: cloudrf:cloudrf-account-api
   name: CloudRF Account API
   description: Account-level resources such as metrics.
@@ -152,6 +137,21 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cloudrf-template-api-openapi.yml
+  - type: Documentation
+    url: https://cloudrf.com/documentation/developer/
+  - type: Reference
+    url: https://cloudrf.com/documentation/developer/swagger-ui/
+  - type: CodeExamples
+    url: https://github.com/Cloud-RF/CloudRF-API-clients
+- aid: cloudrf:cloudrf-3-d-api
+  name: CloudRF 3 D API
+  description: 3D coverage and model upload operations.
+  humanURL: https://cloudrf.com/documentation/developer/
+  tags:
+  - 3 D
+  properties:
+  - type: OpenAPI
+    url: openapi/cloudrf-3-d-api-openapi.yml
   - type: Documentation
     url: https://cloudrf.com/documentation/developer/
   - type: Reference
