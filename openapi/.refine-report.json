@@ -1,13 +1,7 @@
 {
   "provider": "cloudrf",
   "sources": [
-    "cloudrf-3d-api-openapi.yml",
-    "cloudrf-account-api-openapi.yml",
-    "cloudrf-analyse-api-openapi.yml",
-    "cloudrf-create-api-openapi.yml",
-    "cloudrf-manage-api-openapi.yml",
-    "cloudrf-satellite-api-openapi.yml",
-    "cloudrf-template-api-openapi.yml"
+    "_original/cloudrf-openapi.yml"
   ],
   "outputs": [
     "cloudrf-3d-api-openapi.yml",
@@ -18,9 +12,24 @@
     "cloudrf-satellite-api-openapi.yml",
     "cloudrf-template-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "cloudrf-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "superseded outputs removed: cloudrf-3-d-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 7 total)"
+  ],
+  "skipped": [
+    "cloudrf-3-d-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cloudrf-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cloudrf-analyse-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cloudrf-create-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cloudrf-manage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cloudrf-satellite-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cloudrf-template-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
