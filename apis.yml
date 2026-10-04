@@ -150,8 +150,6 @@ apis:
   description: 3D coverage and model upload operations.
   humanURL: https://cloudrf.com/documentation/developer/
   tags:
-  - 3D
-  tags_raw:
   - 3 D
   properties:
   - type: OpenAPI
