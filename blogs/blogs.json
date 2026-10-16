@@ -3,14 +3,13 @@
   "feeds": [
     {
       "source": "https://cloudrf.com/feed/",
-      "feed_url": "https://cloudrf.com/feed/",
-      "title": "CloudRF",
+      "feed_url": "https://cloudrf.com/feed/feed/",
+      "title": "",
       "saved": 0,
-      "nature": "undetermined",
-      "nature_basis": null
+      "method": "discovered"
     }
   ],
-  "fetched": "2026-10-03T12:15:37Z",
+  "fetched": "2026-10-10T13:15:00Z",
   "post_count": 7,
   "feed_nature": "undetermined",
   "feed_nature_basis": null,
