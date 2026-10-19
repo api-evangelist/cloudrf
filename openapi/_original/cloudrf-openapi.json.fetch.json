@@ -1,0 +1,12 @@
+{
+ "url": "https://api.cloudrf.com/openapi.json",
+ "final": "https://api.cloudrf.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 413612,
+ "sha256": "76f6255362b8aa7e92c70b682ff1ec69fc53ac6a2756a82ea64979e44db318e1",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

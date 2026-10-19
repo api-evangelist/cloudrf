@@ -1,51 +1,484 @@
 openapi: 3.2.0
 info:
   title: CloudRF 3 D API
-  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
-  version: '1.0'
+  description: The CloudRF API enables users to model and test radio propagation for any radio, anywhere. Authenticate by passing your API key in the request header as `key`. Set up a CloudRF.com account to generate this key. All data is transferred as JSON. For detailed documentation, visit docs.cloudrf.com.
+  termsOfService: https://cloudrf.com/terms-and-conditions/
   contact:
-    name: CloudRF
-    url: https://cloudrf.com
-  license:
-    name: Proprietary
-    url: https://cloudrf.com/terms
+    email: support@cloudrf.com
+  version: '3.36'
 servers:
 - url: https://api.cloudrf.com
-  description: Production
+  description: Production environment
 - url: https://dev.cloudrf.com
-  description: Development
+  description: Development environment
 security:
 - ApiKeyAuth: []
 tags:
 - name: 3 D
-  description: 3D coverage and model upload operations.
+  description: This set of endpoints allows the user to interact with the 3D processing engine.
 paths:
   /3d:
     post:
-      operationId: create3d
-      summary: 3D coverage
-      description: Calculate 3D coverage for a 3D model.
+      operationId: 3d
       tags:
       - 3 D
+      summary: Calculate 3D coverage for a model
+      description: 'This endpoint allows you to model 3D propagation inside a user-supplied building or tunnel.
+
+        It can handle reflections, material attenuation, fast-fading (dead-spots), 3D antenna patterns and multisite requests for many transmitters.
+
+        This uses GPU acceleration and is resource intensive.
+
+
+        One of "res" and "megavoxels" is required, and calculation speed can be increased significantly by reducing "megavoxels" or increasing "res".'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transmitters:
+                  description: Array of transmitters part of the 3D multisite request
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      frq:
+                        description: Center frequency in megahertz.
+                        type: number
+                        format: float
+                        example: 868
+                      txw:
+                        description: Transmitter power in watts before the antenna.
+                        type: number
+                        format: float
+                        example: 0.1
+                      pos:
+                        $ref: '#/components/schemas/3dPosition'
+                      up:
+                        $ref: '#/components/schemas/3dUpPosition'
+                      fwd:
+                        $ref: '#/components/schemas/3dFwdPosition'
+                      antenna:
+                        $ref: '#/components/schemas/Antenna'
+                3d:
+                  $ref: '#/components/schemas/3d'
+                output:
+                  description: Details relating to the output file.
+                  type: object
+                  properties:
+                    res:
+                      description: Resolution in meters for produced output.
+                      type: number
+                      format: float
+                      example: 0.5
+                    megavoxels:
+                      description: Megavoxels to use for produced output.
+                      type: number
+                      format: float
+                      example: 20
+                    col:
+                      description: Colour schema of your chosen output colour schema.
+                      type: string
+                      example: RAINBOW.dBm
+                    out:
+                      description: 'Measured units:
+
+                        * `1` - Path loss (dB)
+
+                        * `2` - Received power (dBm)
+
+                        * `3` - Field strength (dBuV)
+
+                        * `4` - Signal-to-Noise Ratio (dB)
+
+                        * `5` - Bit-Error-Rate (BER)
+
+                        * `6` - Reference Signal Received Power (dBm)
+
+                        '
+                      type: number
+                      format: integer
+                      example: 2
+                receiver:
+                  description: Details relating to the receiver in the request.
+                  type: object
+                  properties:
+                    rxg:
+                      description: Receiver antenna gain in dBi. Please note that when you use RADAR propagation model (`pm` value `8`) then receiver antenna gain is ignored.
+                      type: number
+                      format: float
+                      example: 3
+                    rxs:
+                      description: Receiver sensitivity/threshold in measured units. Measured units set in `output` object.
+                      type: number
+                      format: float
+                      example: -90
+                default_material:
+                  type: object
+                  properties:
+                    reflection_loss:
+                      description: The amount of loss which will be counted for each reflection for the material obstacle. Metal has low loss for example.
+                      type: number
+                      format: float
+                      minimum: 0
+                      maximum: 90
+                      default: 3
+                      example: 3
+                    transmission_loss:
+                      description: The amount of loss per meter for attenuation when refracting through a material obstacle. Metal would be a very high value.
+                      type: number
+                      format: float
+                      minimum: 0
+                      maximum: 90
+                      default: 15
+                      example: 15
+                    diffusion:
+                      description: The ratio for reflection and refraction for RF energy. This varies by material and a metallic surface will reflect more.
+                      type: number
+                      format: float
+                      minimum: 0
+                      maximum: 10
+                      default: 0.5
+                      example: 0.5
+                materials:
+                  description: An array of custom materials as used within the input. Optional.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      keys:
+                        description: The keys of custom materials under which to apply the material settings to.
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - Wood
+                        - Gravel
+                      reflection_loss:
+                        description: The amount of loss which will be counted for each reflection for the material obstacle. Metal has low loss for example.
+                        type: number
+                        format: float
+                        minimum: 0
+                        maximum: 90
+                        default: 3
+                        example: 3
+                      transmission_loss:
+                        description: The amount of loss per meter for attenuation when refracting through a material obstacle. Metal would be a very high value.
+                        type: number
+                        format: float
+                        minimum: 0
+                        maximum: 90
+                        default: 15
+                        example: 15
+                      diffusion:
+                        description: The ratio for reflection and refraction for RF energy. This varies by material and a metallic surface will reflect more.
+                        type: number
+                        format: float
+                        minimum: 0
+                        maximum: 10
+                        default: 0.5
+                        example: 0.5
+                  example:
+                  - keys:
+                    - Wood
+                    - Gravel
+                    reflection_loss: 3
+                    transmission_loss: 15
+                    diffusion: 0.5
+                  - keys:
+                    - Metal
+                    - Glass
+                    reflection_loss: 1
+                    transmission_loss: 30
+                    diffusion: 0.7
       responses:
         '200':
-          description: 3D coverage result.
-  /3d-upload:
+          description: Success - JSON object returned containing a successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the results of the /3d call.
+                properties:
+                  model_file:
+                    type: string
+                    format: uri
+                    description: URL to calculation output file in compressed glTF format, compressed with 'KHR_draco_mesh_compression'.
+                    example: https://api.cloudrf.com/3d/model/download/?uid=40843&model=1718708130-subway.glb
+                  model_file_uncompressed:
+                    type: string
+                    format: uri
+                    description: URL to uncompressed calculation output file in uncompressed glTF format. Not recommended.
+                    example: https://api.cloudrf.com/3d/model/download/?uid=40843&model=1718708130-subway.glb&uncompressed=1
+                  model_viewer:
+                    type: string
+                    format: uri
+                    description: URL to live viewer of calculation output file as glTF.
+                    example: https://api.cloudrf.com/3d/model/viewer/?uid=40843&model=1718708130-subway.glb
+                  file_size_MB:
+                    type: number
+                    format: float
+                    description: The size of the calculation output file.
+                    example: 0.657
+                  file_size_uncompressed_MB:
+                    type: number
+                    format: float
+                    description: The size of the uncompressed calculation output file.
+                    example: 19.024
+                  input_model_viewer:
+                    type: string
+                    format: uri
+                    description: URL to live viewer of calculation input file as glTF.
+                    example: https://api.cloudrf.com/3d/model/viewer/?uid=40843&model=subway.glb
+                  elapsed_s:
+                    type: number
+                    format: float
+                    description: The elapsed time taken to calculate the output in seconds.
+                    example: 18.06
+                  megavoxels:
+                    type: number
+                    format: float
+                    description: The number of megavoxels used in the calculation.
+                    example: 20
+                  resolution:
+                    type: number
+                    format: float
+                    description: The resolution, in meters, of a voxel in the calculation.
+                    example: 0.235
+                  calculation_adjusted:
+                    type: array
+                    description: An array of messages indicating if a calculation was adjusted due to account limitations or restrictions on settings.
+                    items:
+                      type: string
+                    example: []
+  /3d/model/upload:
     post:
-      operationId: upload3dModel
-      summary: Upload GLB model
-      description: Upload a GLB 3D model used for 3D coverage calculations.
+      operationId: 3dModelUpload
       tags:
       - 3 D
+      summary: Upload a GLB model to use with a 3D calculation request
+      description: 'Upload a GLB model which can be used in combination with the `/3d` request.
+
+
+        Please note that only a single model can be uploaded with each request.
+
+
+        The example below gives a named value of `file`, but this can be anything. The API doesn''t look for a particular name, rather it takes the first file which was sent.'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload.
+              required:
+              - file
       responses:
         '200':
-          description: Model uploaded.
+          description: Success - JSON object returned containing a successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the results of the /3d/model/upload call.
+                properties:
+                  message:
+                    type: string
+                    description: A message of the response.
+                    example: Model uploaded OK
+                  file:
+                    type: string
+                    description: The name of the file which was uploaded
+                    example: subway.glb
+                  model_viewer:
+                    type: string
+                    description: A url to view the uploaded model.
+                    example: https://api.cloudrf.com/3d/model/viewer/?uid=40843&model=hello_world.glb
+                  file_size_MB:
+                    type: number
+                    format: float
+                    description: The size of the uploaded file.
+                    example: 18.356
+                  storage_used_MB:
+                    type: number
+                    format: float
+                    description: The total amount of storage used in the users account, calculated in megabytes.
+                    example: 526.522
+                  storage_remaining_MB:
+                    type: number
+                    format: float
+                    description: The total amount of storage remaining in the users account, calculated in megabytes.
+                    example: 474
 components:
+  schemas:
+    3dPosition:
+      type: object
+      properties:
+        x:
+          description: X value for the position of a transmitter relative to model origin
+          type: number
+          format: float
+          example: 0
+        y:
+          description: Y value for the position of a transmitter relative to model origin
+          type: number
+          format: float
+          example: 0
+        z:
+          description: Z value for the position of a transmitter relative to model origin
+          type: number
+          format: float
+          example: 0
+    Antenna:
+      type: object
+      properties:
+        txg:
+          description: Transmitter antenna gain in dBi. A half-wave dipole has a gain of 2.15dBi. A mobile phone is 0 to 2dBi, depending on the frequency.
+          type: number
+          format: float
+          minimum: -10
+          maximum: 60
+          default: 2.15
+          example: 2.15
+        txl:
+          description: Feeder loss in dB. A long feeder has more loss. Loss varies by material and wavelength eg. LMR-400
+          type: number
+          format: float
+          minimum: 0
+          maximum: 60
+          default: 0
+          example: 1
+        ant:
+          description: 'Antenna pattern code:
+
+            * `0` - Allows custom options (see: `hbw`; `vbw`; `fbr`)
+
+            * `1` - Vertical dipole (omni-directional)
+
+            '
+          type: number
+          format: integer
+          default: 1
+          example: 39
+          enum:
+          - 0
+          - 1
+        azi:
+          description: 'Antenna azimuth in degrees North.
+
+            You can use more than one azimuth at a time to simulate the same antenna pointing in different directions. To do this please use a comma-separated list, for example `0,120,240` would simulate 3 antennas spaced 120 degrees apart from true North. You can enter up to a maximum of 20 azimuth values.
+
+            '
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 360
+          default: 0
+          example: 0
+        tlt:
+          description: Antenna tilt in degrees below the horizon (inverted) where horizon is `0`.
+          type: number
+          format: float
+          minimum: -90
+          maximum: 90
+          default: 0
+          example: 0
+        hbw:
+          description: Custom antenna horizontal beamwidth in degrees. For use only with `ant` value of `0`.
+          type: number
+          format: float
+          minimum: 0
+          maximum: 360
+          default: 0
+          example: 120
+        vbw:
+          description: Custom antenna vertical beamwidth in degrees. For use only with `ant` value of `0`.
+          type: number
+          format: float
+          minimum: 0
+          maximum: 360
+          default: 0
+          example: 30
+        fbr:
+          description: Front-to-back ratio measured in dB. A highly directional antenna will have a high FBR.
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 60
+          default: 0
+          example: 0
+        pol:
+          description: 'Antenna polarization:
+
+            * `v` - Vertical
+
+            * `h` - Horizontal
+
+            '
+          type: string
+          enum:
+          - v
+          - h
+          default: v
+          example: v
+    3dFwdPosition:
+      type: object
+      properties:
+        x:
+          description: X value for the direction that an antenna is pointing
+          type: number
+          format: float
+          example: 0
+        y:
+          description: Y value for the direction that an antenna is pointing
+          type: number
+          format: float
+          example: 0
+        z:
+          description: Z value for the direction that an antenna is pointing
+          type: number
+          format: float
+          example: 1
+    3dUpPosition:
+      type: object
+      properties:
+        x:
+          description: X value for the up direction for the coordinate system
+          type: number
+          format: float
+          example: 0
+        y:
+          description: Y value for the up direction for the coordinate system
+          type: number
+          format: float
+          example: 1
+        z:
+          description: Z value for the up direction for the coordinate system
+          type: number
+          format: float
+          example: 0
+    3d:
+      type: object
+      properties:
+        input_file:
+          description: Filename of the GLB model uploaded via the upload API. Private to your account.
+          type: string
+          example: subway.glb
+        max_reflections:
+          description: Number of reflections for multipath.
+          type: number
+          format: integer
+          minimum: 1
+          maximum: 10
+          default: 3
+          example: 1
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: key
-externalDocs:
-  description: CloudRF Developer Documentation
-  url: https://cloudrf.com/documentation/developer/
+      description: An APIKey passed in the request headers.

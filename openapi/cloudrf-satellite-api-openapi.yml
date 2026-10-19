@@ -1,41 +1,737 @@
 openapi: 3.2.0
 info:
   title: CloudRF Satellite API
-  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
-  version: '1.0'
+  description: The CloudRF API enables users to model and test radio propagation for any radio, anywhere. Authenticate by passing your API key in the request header as `key`. Set up a CloudRF.com account to generate this key. All data is transferred as JSON. For detailed documentation, visit docs.cloudrf.com.
+  termsOfService: https://cloudrf.com/terms-and-conditions/
   contact:
-    name: CloudRF
-    url: https://cloudrf.com
-  license:
-    name: Proprietary
-    url: https://cloudrf.com/terms
+    email: support@cloudrf.com
+  version: '3.36'
 servers:
 - url: https://api.cloudrf.com
-  description: Production
+  description: Production environment
 - url: https://dev.cloudrf.com
-  description: Development
+  description: Development environment
 security:
 - ApiKeyAuth: []
 tags:
 - name: Satellite
-  description: Satellite coverage modeling.
 paths:
-  /satellite:
-    post:
-      operationId: createSatellite
-      summary: Satellite coverage
-      description: Model satellite coverage from satellite database parameters.
+  /satellite/query:
+    get:
+      operationId: satellite/query
       tags:
       - Satellite
+      summary: Query the satellite database
+      description: This endpoint returns a paginated list of TLE results (Over 6000 active satellites) from the database. The data is updated regularly from a third party source.
+      parameters:
+      - in: query
+        name: name
+        schema:
+          type: string
+          description: Satellite name. Not case sensitive and can be partial eg skynet*
+          example: skynet
+        required: false
+      - in: query
+        required: false
+        name: norad_cat_id
+        schema:
+          type: integer
+          description: NORAD catalogue number
+          example: 20776
       responses:
         '200':
-          description: Satellite coverage result.
+          description: Success.
+  /satellite/area:
+    post:
+      operationId: satellite/area
+      tags:
+      - Satellite
+      summary: Model coverage for a satellite to an area
+      description: This GPU accelerated endpoint allows you to test coverage from a satellite, by name, to a defined box on the earth.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                satellites:
+                  description: Array of satellites to test, listed by name
+                  type: array
+                  items:
+                    type: string
+                    example: SKYNET 4C
+                date_time:
+                  description: ISO-8601 timestamp for querying TLE data.
+                  type: string
+                  example: '2024-07-23T04:54:28Z'
+                receiver:
+                  description: Details relating to the receiver in the request.
+                  type: object
+                  properties:
+                    alt:
+                      description: Altitude of transmitter above ground level in the units which you have defined in the `output` object.
+                      type: number
+                      format: float
+                      example: 1
+                environment:
+                  $ref: '#/components/schemas/Environment'
+                output:
+                  description: Details relating to the output
+                  type: object
+                  properties:
+                    col:
+                      description: Colour schema. Use a monotone as it is LOS only eg. GREEN.dBm
+                      type: string
+                      example: GREEN.dBm
+                    res:
+                      description: Resolution in meters. Use 2m for a small 1km urban study. Use 30m for a larger rural area.
+                      type: integer
+                      example: 10
+                    rx_units:
+                      description: Receiver height units
+                      type: string
+                      example: m
+                    bounds:
+                      $ref: '#/components/schemas/Bounds'
+      responses:
+        '200':
+          description: Success - JSON object returned containing image URLs, colour key values, and calculation statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the results of the /satellite/area call.
+                properties:
+                  tiff:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/tiff
+                  tiff_3857:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the Mercartor projection standard.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/tiff-3857
+                  tiff_4326:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/tiff
+                  kmz:
+                    type: string
+                    format: uri
+                    description: URL to KMZ file.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/kmz
+                  shp:
+                    type: string
+                    format: uri
+                    description: URL to ESRI Shapefile.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/shp
+                  json:
+                    type: string
+                    format: uri
+                    description: URL to GeoJSON.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/json
+                  zip:
+                    type: string
+                    format: uri
+                    description: URL to ATAK Mission Package.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/zip
+                  url:
+                    type: string
+                    format: uri
+                    description: URL to view layer on a map in a browser.
+                    example: https://api.cloudrf.com/archive/calc?id=bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09
+                  PNG_Mercator:
+                    type: string
+                    format: uri
+                    description: URL to PNG image file applying the Mercartor projection standard.
+                    example: https://api.cloudrf.com/output/projection/3857/40843/0722102238_Testing_A1
+                  PNG_WGS84:
+                    type: string
+                    format: uri
+                    description: URL to PNG image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/users/40843/0722102238_Testing_A1.4326.png
+                  bounds:
+                    type: array
+                    description: A list of image bounds as WGS84 decimal degrees. Order is clockwise from North,East,South,West.
+                    items:
+                      type: integer
+                      format: float
+                      example:
+                      - 38.942844475233805
+                      - 1.4826338797780443
+                      - 38.88915552476619
+                      - 1.413357814658543
+                  id:
+                    type: string
+                    description: Unique system identifier for the calculation. This is a one-up number from the main log table.
+                    example: 3930916
+                  sid:
+                    type: string
+                    description: Private unique system identifier for the calculation. This is a hash of the one-up number from the main log table intended for public maps etc.
+                    example: M2ZSaUZuVlVDRno3TTJDTGVqRGJlUT09
+                  area:
+                    type: number
+                    format: float
+                    description: Coverage area measured in kilometers squared (km2).
+                    example: 0
+                  coverage:
+                    type: string
+                    description: Site efficiency computed from requested radius versus actual coverage area. A perfect circle out at sea would be 100% efficient.
+                    example: 0%
+                  key:
+                    type: array
+                    description: Array of objects describing the RGB color schema as signal level in dB/dBm/dBuV, red, green and blue where red would be rgb(255,0,0).
+                    items:
+                      type: object
+                      properties:
+                        l:
+                          type: string
+                          description: Received signal power in dBm
+                          example: -20dBm
+                        r:
+                          description: RED colour intensity. 0 to 255.
+                          type: integer
+                          example: 255
+                        g:
+                          description: GREEN colour intensity. 0 to 255.
+                          type: integer
+                          example: 19
+                        b:
+                          description: BLUE colour intensity. 0 to 255.
+                          type: integer
+                          example: 0
+                      example:
+                      - l: -20dBm
+                        r: 255
+                        g: 19
+                        b: 0
+                      - l: -24dBm
+                        r: 255
+                        g: 61
+                        b: 0
+                      - l: -28dBm
+                        r: 255
+                        g: 102
+                        b: 0
+                      - l: -32dBm
+                        r: 255
+                        g: 144
+                        b: 0
+                      - l: -36dBm
+                        r: 255
+                        g: 185
+                        b: 0
+                      - l: -40dBm
+                        r: 255
+                        g: 227
+                        b: 0
+                      - l: -44dBm
+                        r: 242
+                        g: 255
+                        b: 0
+                      - l: -48dBm
+                        r: 200
+                        g: 255
+                        b: 0
+                      - l: -52dBm
+                        r: 159
+                        g: 255
+                        b: 0
+                      - l: -56dBm
+                        r: 117
+                        g: 255
+                        b: 0
+                      - l: -60dBm
+                        r: 76
+                        g: 255
+                        b: 0
+                      - l: -64dBm
+                        r: 34
+                        g: 255
+                        b: 0
+                      - l: -68dBm
+                        r: 0
+                        g: 255
+                        b: 7
+                      - l: -72dBm
+                        r: 0
+                        g: 255
+                        b: 49
+                      - l: -76dBm
+                        r: 0
+                        g: 255
+                        b: 90
+                      - l: -80dBm
+                        r: 0
+                        g: 255
+                        b: 132
+                      - l: -84dBm
+                        r: 0
+                        g: 255
+                        b: 173
+                      - l: -88dBm
+                        r: 0
+                        g: 255
+                        b: 215
+                      - l: -92dBm
+                        r: 0
+                        g: 254
+                        b: 255
+                      - l: -96dBm
+                        r: 0
+                        g: 212
+                        b: 255
+                      - l: -100dBm
+                        r: 0
+                        g: 171
+                        b: 255
+                      - l: -104dBm
+                        r: 0
+                        g: 129
+                        b: 255
+                      - l: -108dBm
+                        r: 0
+                        g: 88
+                        b: 255
+                      - l: -112dBm
+                        r: 0
+                        g: 46
+                        b: 255
+                  elapsed:
+                    description: Time taken for API call (milliseconds).
+                    type: number
+                    format: int32
+                    example: 1572
+                  balance:
+                    description: API call credit usage. Only applies to public system.
+                    type: integer
+                    format: int32
+                    example: 1
+                  calculation_adjusted:
+                    type: array
+                    description: An array of messages indicating if a calculation was adjusted due to account limitations or restrictions on settings.
+                    items:
+                      type: string
+                    example: []
+                  satellites:
+                    type: array
+                    description: Positional information about the satellites which were used in the model
+                    items:
+                      type: string
+                    example: []
+  /spotbeam:
+    post:
+      operationId: spotbeam
+      description: 'This endpoint returns a ground coverage plot for a satellite spot beam as an image.
+
+        The satellite is defined by its azimuth, elevation and altitude as observed from the receiver, instead of by its actual position above the earth.
+
+        The receiver position is the centre of the output area and the propagation model is an optimistic ITU-R P.525 free space model with Bullington diffraction.
+
+        For best results, this should be used with the SATCOM colour key. Only received power (dBm) units are available with this API.'
+      tags:
+      - Satellite
+      summary: Satellite spot-beam coverage
+      requestBody:
+        description: The request payload providing the site properties.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                receiver:
+                  description: Details relating to the receiver in the request.
+                  type: object
+                  properties:
+                    lat:
+                      description: Latitude of receiver in WGS84 decimal degrees.
+                      type: number
+                      format: float
+                      minimum: -89
+                      maximum: 89
+                      example: -19.278455
+                    lon:
+                      description: Longitude of receiver in WGS84 decimal degrees.
+                      type: number
+                      format: float
+                      minimum: -180
+                      maximum: 180
+                      example: 146.830305
+                    alt:
+                      description: Altitude of receiver above ground level in `metric` or `imperial` units.
+                      type: number
+                      format: float
+                      minimum: 0.1
+                      maximum: 3000
+                      example: 10
+                    units:
+                      description: 'Define the distance units applied to heights and distances:
+
+                        * `m` - Define units in (metric) meters and kilometers above ground level.
+
+                        * `m_amsl` - Define units in meters and kilometers above mean sea level.
+
+                        * `f` - Define units in (imperial) feet and miles above ground level.
+
+                        * `f_amsl` - Define units in (imperial) feet and miles above mean sea level.
+
+                        '
+                      type: string
+                      default: m
+                      enum:
+                      - m
+                      - m_amsl
+                      - f
+                      - f_amsl
+                    rxg:
+                      description: Receiver antenna gain in dBi. A DMC-120 pop-up dish has 6dBi gain.
+                      type: number
+                      format: float
+                      minimum: -30
+                      maximum: 60
+                      default: 0
+                      example: 6
+                    rxs:
+                      description: Receiver sensitivity/threshold in dBm. Use -110dBm to match the SATCOM colour schema.
+                      type: number
+                      format: float
+                      minimum: -140
+                      maximum: -30
+                      default: -90
+                      example: -110
+                satellite:
+                  description: Details relating to the satellite in the request.
+                  type: object
+                  properties:
+                    az:
+                      description: Azimuth towards the satellite in degrees North.
+                      type: number
+                      format: float
+                      minimum: 0
+                      maximum: 359
+                      example: 180
+                    el:
+                      description: Elevation of the satellite above the horizon in degrees.
+                      type: number
+                      format: float
+                      minimum: 5
+                      maximum: 90
+                      example: 45
+                    alt:
+                      description: Altitude of the satellite above mean sea level in meters. This affects distance/power calculations only. Geostationary orbit is 35786000.
+                      type: number
+                      format: float
+                      minimum: 15000000
+                      maximum: 60000000
+                      example: 35786000
+                    frq:
+                      description: Center frequency in Megahertz. SATCOM can use a wide variety of frequencies from VHF to EHF.
+                      type: number
+                      format: float
+                      minimum: 30
+                      maximum: 100000
+                      example: 1500
+                    txw:
+                      description: Transmitter power in watts before the antenna.
+                      type: number
+                      format: float
+                      minimum: 1.0e-11
+                      maximum: 500000000
+                      example: 50
+                    txg:
+                      description: Satellite antenna gain in dBi. Typically a very high figure > 30dBi due to the distance.
+                      type: number
+                      format: float
+                      minimum: -30
+                      maximum: 60
+                      default: 0
+                      example: 40
+                output:
+                  description: Details relating to the output
+                  type: object
+                  properties:
+                    rad:
+                      description: Radius in kilometers for output. This is not a guarantee a signal will reach. For a high resolution simulation with buildings, keep this small eg. 1.0
+                      type: number
+                      format: float
+                      minimum: 0.001
+                      maximum: 500
+                      example: 50
+                    res:
+                      description: Resolution in meters for produced output. A high resolution (eg. 2m) is much slower than a medium resolution (eg. 20m) for area calculations.
+                      type: number
+                      format: integer
+                      minimum: 1
+                      maximum: 300
+                      default: 30
+                      example: 20
+                    col:
+                      description: Received Power colour schema. Can be a custom schema or the system default `SATCOM.dBm` which supports -110dBm.
+                      type: string
+                      example: SATCOM.dBm
+              required:
+              - receiver
+              - satellite
+              - output
+            examples:
+              example-spotbeam:
+                value:
+                  receiver:
+                    lat: -19.278455
+                    lon: 146.830305
+                    alt: 1
+                    units: m
+                    rxg: 0
+                    rxs: -110
+                  satellite:
+                    az: 180
+                    el: 45
+                    alt: 35786000
+                    frq: 1500
+                    txw: 60
+                    txg: 45
+                  output:
+                    rad: 2
+                    res: 5
+                    col: SATCOM.dBm
+      responses:
+        '200':
+          description: Success - JSON object returned containing image URLs, colour key values, and calculation statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the results of the /spotbeam call.
+                properties:
+                  tiff:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/tiff
+                  tiff_3857:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the Mercartor projection standard.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/tiff-3857
+                  tiff_4326:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/tiff
+                  kmz:
+                    type: string
+                    format: uri
+                    description: URL to KMZ file.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/kmz
+                  shp:
+                    type: string
+                    format: uri
+                    description: URL to ESRI Shapefile.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/shp
+                  json:
+                    type: string
+                    format: uri
+                    description: URL to GeoJSON.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/json
+                  zip:
+                    type: string
+                    format: uri
+                    description: URL to ATAK Mission Package.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09/zip
+                  url:
+                    type: string
+                    format: uri
+                    description: URL to view layer on a map in a browser.
+                    example: https://api.cloudrf.com/archive/calc?id=bjRRWno0aUF3ekN2QW9ISWc2UlcrZz09
+                  PNG_Mercator:
+                    type: string
+                    format: uri
+                    description: URL to PNG image file applying the Mercartor projection standard.
+                    example: https://api.cloudrf.com/output/projection/3857/40843/0722102238_Testing_A1
+                  PNG_WGS84:
+                    type: string
+                    format: uri
+                    description: URL to PNG image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/users/40843/0722102238_Testing_A1.4326.png
+                  bounds:
+                    type: array
+                    description: A list of image bounds as WGS84 decimal degrees. Order is clockwise from North,East,South,West.
+                    items:
+                      type: integer
+                      format: float
+                      example:
+                      - 38.942844475233805
+                      - 1.4826338797780443
+                      - 38.88915552476619
+                      - 1.413357814658543
+                  id:
+                    type: string
+                    description: Unique system identifier for the calculation. This is a one-up number from the main log table.
+                    example: 3930916
+                  sid:
+                    type: string
+                    description: Private unique system identifier for the calculation. This is a hash of the one-up number from the main log table intended for public maps etc.
+                    example: M2ZSaUZuVlVDRno3TTJDTGVqRGJlUT09
+                  area:
+                    type: number
+                    format: float
+                    description: Coverage area measured in kilometers squared (km2).
+                    example: 10028.57
+                  coverage:
+                    type: string
+                    description: Site efficiency computed from requested radius versus actual coverage area. A perfect circle out at sea would be 100% efficient.
+                    example: 0%
+                  key:
+                    type: array
+                    description: Array of objects describing the RGB color schema as signal level in dB/dBm/dBuV, red, green and blue where red would be rgb(255,0,0).
+                    items:
+                      type: object
+                      properties:
+                        l:
+                          type: string
+                          description: Received signal power in dBm
+                          example: -60dBm
+                        r:
+                          description: RED colour intensity. 0 to 255.
+                          type: integer
+                          example: 255
+                        g:
+                          description: GREEN colour intensity. 0 to 255.
+                          type: integer
+                          example: 0
+                        b:
+                          description: BLUE colour intensity. 0 to 255.
+                          type: integer
+                          example: 0
+                  elapsed:
+                    description: Time taken for API call (milliseconds).
+                    type: number
+                    format: int32
+                    example: 137
+                  balance:
+                    description: API call credit usage. Only applies to public system.
+                    type: integer
+                    format: int32
+                    example: 1
+                  calculation_adjusted:
+                    type: array
+                    description: An array of messages indicating if a calculation was adjusted due to account limitations or restrictions on settings.
+                    items:
+                      type: string
+                    example: []
 components:
+  schemas:
+    Bounds:
+      type: object
+      properties:
+        north:
+          description: Latitude in WGS84 decimal degrees.
+          type: number
+          format: float
+          minimum: -89
+          maximum: 89
+          example: -41.272
+        east:
+          description: Longitude in WGS84 decimal degrees.
+          type: number
+          format: float
+          minimum: -180
+          maximum: 180
+          example: 174.788
+        south:
+          description: Latitude in WGS84 decimal degrees.
+          type: number
+          format: float
+          minimum: -89
+          maximum: 89
+          example: -41.294
+        west:
+          description: Longitude in WGS84 decimal degrees.
+          type: number
+          format: float
+          minimum: -180
+          maximum: 180
+          example: 174.773
+    Environment:
+      type: object
+      properties:
+        clt:
+          description: Clutter profile name. If not supplied, but `cll` > `0` then `Minimal.clt` will be used
+          type: string
+          default: Minimal.clt
+        elevation:
+          description: 'Elevation:
+
+            * `1` - Digital Surface Model (DSM)
+
+            * `2` - Digital Terrain Model (DTM)
+
+            '
+          type: number
+          format: integer
+          minimum: 1
+          maximum: 2
+          default: 1
+          example: 1
+          enum:
+          - 1
+          - 2
+        landcover:
+          description: 'Global 10m landcover:
+
+            * `0` - Disabled
+
+            * `1` - Enabled
+
+            '
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 1
+          default: 0
+          example: 0
+          enum:
+          - 0
+          - 1
+        buildings:
+          description: 'Global OSM buildings layer to enhance DTM:
+
+            * `0` - Disabled
+
+            * `1` - Enabled
+
+            '
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 1
+          default: 0
+          example: 0
+          enum:
+          - 0
+          - 1
+        obstacles:
+          description: 'Custom obstacles / clutter:
+
+            * `0` - Disabled
+
+            * `1` - Enabled
+
+            '
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 1
+          default: 0
+          example: 0
+          enum:
+          - 0
+          - 1
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: key
-externalDocs:
-  description: CloudRF Developer Documentation
-  url: https://cloudrf.com/documentation/developer/
+      description: An APIKey passed in the request headers.

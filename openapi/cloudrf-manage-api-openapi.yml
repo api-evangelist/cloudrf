@@ -1,140 +1,616 @@
 openapi: 3.2.0
 info:
   title: CloudRF Manage API
-  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
-  version: '1.0'
+  description: The CloudRF API enables users to model and test radio propagation for any radio, anywhere. Authenticate by passing your API key in the request header as `key`. Set up a CloudRF.com account to generate this key. All data is transferred as JSON. For detailed documentation, visit docs.cloudrf.com.
+  termsOfService: https://cloudrf.com/terms-and-conditions/
   contact:
-    name: CloudRF
-    url: https://cloudrf.com
-  license:
-    name: Proprietary
-    url: https://cloudrf.com/terms
+    email: support@cloudrf.com
+  version: '3.36'
 servers:
 - url: https://api.cloudrf.com
-  description: Production
+  description: Production environment
 - url: https://dev.cloudrf.com
-  description: Development
+  description: Development environment
 security:
 - ApiKeyAuth: []
 tags:
 - name: Manage
-  description: Archive, export, clutter, and noise data management.
+  description: This set of endpoints allow the user to administer data, including enumeration, deletion, and exporting of data in open formats.
 paths:
-  /archive:
+  /archive/list:
     get:
-      operationId: listArchive
-      summary: List archived calculations
-      description: List previously run calculations from the archive.
+      operationId: list
       tags:
       - Manage
+      summary: List calculations from archive
+      description: This endpoint allows users to list area and path calculations - sorted by time and limited to the last few hundred. To fetch all for a given network append a "net" filter with the network name.
+      parameters:
+      - in: query
+        required: false
+        description: North bounding box. WGS84 decimal degrees.
+        name: n
+        schema:
+          type: number
+          format: float
+          example: 65
+      - in: query
+        required: false
+        description: East bounding box. WGS84 decimal degrees.
+        name: e
+        schema:
+          type: number
+          format: float
+          example: 2
+      - in: query
+        required: false
+        description: South bounding box. WGS84 decimal degrees.
+        name: s
+        schema:
+          type: number
+          format: float
+          example: 50
+      - in: query
+        required: false
+        description: West bounding box. WGS84 decimal degrees.
+        name: w
+        schema:
+          type: number
+          format: float
+          example: -5
       responses:
         '200':
-          description: Archive listing.
+          description: Success - JSON array returned providing  of site names and limited metadata.
+          content: {}
   /archive/delete:
     get:
-      operationId: deleteArchive
-      summary: Delete archived calculation
-      description: Remove a single calculation from the archive.
+      operationId: delete
       tags:
       - Manage
+      summary: Delete calculation from database
+      description: '**Warning! You could lose data.**
+
+        This endpoint deletes the entry from the database and the file from the disk.
+
+        This deletes a single calculation from the database and from your folder.'
+      parameters:
+      - in: query
+        required: true
+        description: Unique calculation ID number.
+        name: cid
+        schema:
+          type: integer
       responses:
         '200':
-          description: Deleted.
-  /network/delete:
+          description: Success - message returned confirming the number of sites deleted and elapsed time.
+          content: {}
+  /archive/delete/network:
     get:
       operationId: deleteNetwork
-      summary: Delete network
-      description: Delete an entire network of calculations.
       tags:
       - Manage
+      summary: Delete entire network
+      description: '**Warning! You could lose lots of data.**
+
+        This endpoint deletes all associated child entries from the database and the files from the disk.'
+      parameters:
+      - in: query
+        required: true
+        description: Network name.
+        name: nid
+        schema:
+          type: string
       responses:
         '200':
-          description: Deleted.
-  /export:
+          description: A message confirming the number of sites deleted and elapsed time.
+          content: {}
+  /archive/export:
     get:
-      operationId: exportCalculation
-      summary: Export calculation
-      description: Export a calculation in a GIS-friendly format (TIFF, KMZ, SHP, JSON, ZIP).
+      operationId: export
       tags:
       - Manage
+      summary: Export calculation in GIS file format
+      description: 'This endpoint downloads your data in a format suitable for a third-party viewer such as Google Earth or ESRI Arcmap.
+
+        Supported formats:
+
+        * KML
+
+        * KMZ
+
+        * GeoTIFF
+
+        * SHP
+
+        * URL
+
+        * HTML'
+      parameters:
+      - in: query
+        required: true
+        description: Calculation file name.
+        name: file
+        schema:
+          type: string
+      - in: query
+        required: true
+        description: 'Required file format: KML; KMZ; SHP; GeoTIFF or ATAK ZIP'
+        name: fmt
+        schema:
+          type: string
+          enum:
+          - kml
+          - kmzppa
+          - shp
+          - tiff
+          - zip
       responses:
         '200':
-          description: Export.
-  /clutter:
+          description: Success - file download URL with the MIME type returned.
+          content: {}
+  /clutter/add:
     post:
-      operationId: uploadClutter
-      summary: Upload clutter
-      description: Upload clutter GeoJSON data for inclusion in calculations.
+      operationId: addClutter
       tags:
       - Manage
+      summary: Upload clutter data as GeoJSON
+      description: This endpoint supports upload of GeoJSON lineString and polygon features to your account.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  default: Clutter
+                type:
+                  type: string
+                  default: FeatureCollection
+                features:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Feature'
+            examples:
+              example-add-clutter:
+                value:
+                  name: Clutter
+                  type: FeatureCollection
+                  features:
+                  - type: Feature
+                    features:
+                      geometry: Polygon
+                      coordinates:
+                      - - -2.648749
+                        - 51.639982
+                      - - -2.648814
+                        - 51.641129
+                      - - -2.647935
+                        - 51.641446
+                      - - -2.646937
+                        - 51.64096
+                      - - -2.647176
+                        - 51.640137
+                      - - -2.646178
+                        - 51.639692
+                      - - -2.647154
+                        - 51.638546
+                      - - -2.647827
+                        - 51.639544
+                      - - -2.648749
+                        - 51.639982
+                      properties:
+                        height: '4'
+                        material: '1'
       responses:
         '200':
-          description: Uploaded.
+          description: Success - JSON information message returned with count of clutter items added.
+          content:
+            application/json:
+              schema:
+                description: Count of clutter items.
+                properties:
+                  info:
+                    type: string
+                    example: Added 1 item(s) of clutter. Rejected 0 item(s) of clutter. Total 1 items(s) of clutter exist on your profile.
+  /clutter/get/{latitude}/{longitude}:
     get:
-      operationId: listClutter
-      summary: List clutter
-      description: Retrieve private clutter data.
+      operationId: getClutter
       tags:
       - Manage
+      summary: Get private clutter data for a location
+      description: 'This endpoint fetches private clutter items for the given co-ordinates out to 1 decimal degree radius (approximately 120 km at the equator).
+
+        Results are limited to 100 items sorted by nearest first.
+
+        GeoJSON coordinates are passed as a clean URL, for example, `https://api.cloudrf.com/clutter/get/51.637723/-2.649606`'
+      parameters:
+      - name: latitude
+        in: path
+        required: true
+        description: GeoJSON coordinate latitude in decimal degrees.
+        schema:
+          type: number
+          format: float
+          example: 51.637723
+      - name: longitude
+        in: path
+        required: true
+        description: GeoJSON coordinate longitude in decimal degrees.
+        schema:
+          type: number
+          format: float
+          example: -2.649606
       responses:
         '200':
-          description: Clutter listing.
-  /clutter/delete:
+          description: Success - JSON Feature Collection array returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  features:
+                    $ref: '#/components/schemas/Feature'
+                  id:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Clutter identifier
+                        example: '643'
+  /clutter/delete/{id}:
     get:
       operationId: deleteClutter
-      summary: Delete clutter
-      description: Remove a clutter item.
       tags:
       - Manage
+      summary: Delete clutter item by its ID
+      description: 'Delete a private clutter item referenced by its `id` passed as a clean URL. For example, `/clutter/delete/123`
+
+        The `id` is returned by the get clutter endpoint (`/clutter/get`)
+
+        Please note that if you pass in an `id` value of `0` then all clutter for your profile will be deleted.'
+      parameters:
+      - in: path
+        required: true
+        description: Clutter `id` number.
+        name: id
+        schema:
+          type: integer
       responses:
         '200':
-          description: Deleted.
-  /noise:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: string
+                    example: 'Deleted a total of 1 clutter entries. ID #2858 deleted.'
+  /clutter/delete/0:
+    get:
+      operationId: deleteAllClutter
+      tags:
+      - Manage
+      summary: Delete all clutter on your profile
+      description: Similar to `/clutter/delete/{id}`, however if you pass an `id` value of `0` then you will delete all clutter on your profile.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: string
+                    example: Deleted a total of 4 clutter entries.
+  /noise/create:
     post:
-      operationId: submitNoise
-      summary: Submit noise measurements
-      description: Submit noise measurements to the CloudRF noise database.
+      operationId: noiseCreate
       tags:
       - Manage
+      summary: Submit noise data for an array of locations which is referenced by other APIs…
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    description: Name of the noise data point or sensor
+                    type: string
+                    example: DORA-1
+                    default: default
+                  group_name:
+                    description: Name of the noise data set or sensor group
+                    type: string
+                    example: DORA
+                    default: default
+                  frequency:
+                    description: Center frequency in megahertz for the noise data.
+                    type: number
+                    format: integer
+                    example: 446
+                  noise:
+                    description: Noise data value in dBm.
+                    type: number
+                    format: integer
+                    minimum: -144
+                    maximum: -20
+                    example: -87
+                  latitude:
+                    description: Latitude of noise value in WGS84 decimal degrees.
+                    type: number
+                    format: float
+                    example: 38.912706
+                  longitude:
+                    description: Longitude of noise value in WGS84 decimal degrees.
+                    type: number
+                    format: float
+                    example: 1.439883
+              example:
+              - frequency: 446
+                noise: -87
+                latitude: 38.912706
+                longitude: 1.439883
+              - frequency: 446
+                noise: -85
+                latitude: 38.913
+                longitude: 1.44
+              - frequency: 446
+                noise: -90
+                latitude: 38.914
+                longitude: 1.441
       responses:
         '200':
-          description: Submitted.
-  /noise-average:
+          description: A successful message acknowledging that the noise value was stored
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the results of the /noise/create call.
+                properties:
+                  message:
+                    type: string
+                    description: Confirmation message.
+                    example: Noise data successfully stored.
+  /noise/get:
     post:
-      operationId: noiseAverage
-      summary: 24-hour average noise
-      description: Compute a 24-hour average noise figure for a location.
+      operationId: noiseGet
       tags:
       - Manage
+      summary: Get the average noise recorded for locations radii over the last 24 hours.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  frequency:
+                    description: Center frequency in megahertz for the noise data to retrieve.
+                    type: number
+                    format: integer
+                    example: 446
+                  bandwidth:
+                    description: Bandwidth in MHz.
+                    type: number
+                    example: 0.1
+                  latitude:
+                    description: Latitude of noise value in WGS84 decimal degrees.
+                    type: number
+                    format: float
+                    example: 38.912706
+                  longitude:
+                    description: Longitude of noise value in WGS84 decimal degrees.
+                    type: number
+                    format: float
+                    example: 1.439883
+                  radius:
+                    description: Radius from the latitude/longitude location to include noise data.
+                    type: number
+                    format: integer
+                    minimum: 1
+                    maximum: 200
+                    example: 5
+              example:
+              - frequency: 446
+                bandwidth: 0.1
+                latitude: 38.912706
+                longitude: 1.439883
+                radius: 5
+              - frequency: 446
+                bandwidth: 0.1
+                latitude: 38.913
+                longitude: 1.44
+                radius: 5
+              - frequency: 446
+                bandwidth: 0.1
+                latitude: 38.914
+                longitude: 1.441
+                radius: 5
       responses:
         '200':
-          description: Average noise figure.
+          description: A successful message returning the average noise values for the requested parameters.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: An object containing the results of the /noise/get call.
+                  properties:
+                    latitude:
+                      description: Latitude of noise value in WGS84 decimal degrees.
+                      type: number
+                      format: float
+                      example: 38.912706
+                    longitude:
+                      type: number
+                      format: float
+                      description: Longitude of noise value in WGS84 decimal degrees.
+                      example: 1.439883
+                    average_noise_dBm:
+                      type: number
+                      format: integer
+                      description: The average noise value for the requested location/radius combination returned in dBm.
+                      example: -102
+                  example:
+                  - latitude: 38.912706
+                    longitude: 1.439883
+                    average_noise_dBm: -102
+                  - latitude: 38.913
+                    longitude: 1.44
+                    average_noise_dBm: -100
+                  - latitude: 38.914
+                    longitude: 1.441
+                    average_noise_dBm: -105
   /noise/map:
     get:
       operationId: noiseMap
-      summary: Noise database map
-      description: Retrieve a tile of the noise database map.
       tags:
       - Manage
+      summary: Get a map of database noise
+      description: Returns an 8-bit greyscale geotiff where the value of each pixel is abs(noise floor) in dBm. Used for the user interface so users can see the noise.
+      parameters:
+      - in: query
+        name: frequency
+        schema:
+          description: Center frequency in megahertz for the noise data to retrieve.
+          type: number
+          example: 446
+      - in: query
+        name: north
+        schema:
+          description: North bound of the noise map.
+          type: number
+          example: 38.92
+      - in: query
+        name: south
+        schema:
+          description: South bound of the noise map.
+          type: number
+          example: 38.9
+      - in: query
+        name: east
+        schema:
+          description: East bound of the noise map.
+          type: number
+          example: 1.45
+      - in: query
+        name: west
+        schema:
+          description: West bound of the noise map.
+          type: number
+          example: 1.43
+      - in: query
+        name: resolution
+        schema:
+          description: The resolution of the noise map in meters.
+          type: number
+          example: 20
+      - in: query
+        name: point_limit
+        schema:
+          description: The maximum number of noise data points to use in calculating noise map.
+          type: integer
+          example: 20
       responses:
         '200':
-          description: Noise map.
-  /noise/delete:
+          description: Success - A TIFF noise map
+          content:
+            image/tiff:
+              schema:
+                type: string
+                format: binary
+  /noise/clear:
     post:
-      operationId: deleteNoise
-      summary: Delete noise data
-      description: Remove noise data from the database.
+      operationId: noiseClear
       tags:
       - Manage
+      summary: Delete noise data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: If set, only noise data with a matching name will be deleted (case-insensitive)
+                  type: string
+                  example: DORA-1
+                group_name:
+                  description: If set, only noise data with a matching group name will be deleted (case-insensitive)
+                  type: string
+                  example: DORA
+                frequency:
+                  description: If set, only noise data with a matching frequency will be deleted
+                  type: number
+                  example: 446
+                partial:
+                  example: true
+                  description: If true, any noise data that partially matches name/group_name will be deleted
       responses:
         '200':
-          description: Deleted.
+          description: A successful message acknowledging that the noise was deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the results of the /noise/create call.
+                properties:
+                  message:
+                    type: string
+                    description: Confirmation message.
+                    example: Successfully deleted 10 piece(s) of noise data.
 components:
+  schemas:
+    Feature:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Identifier for item of clutter.
+          default: Feature
+        features:
+          type: object
+          properties:
+            geometry:
+              type: string
+              description: Shape describing an item of clutter
+              default: Polygon
+              example: Polygon
+            coordinates:
+              type: string
+              description: '[GeoJSON](https://github.com/geojson/schema) coordinate pairs. Locations of item/s of clutter passed as an array. For example: [-2.646178,51.639692].'
+              example: '[-2.646178,51.639692]'
+            properties:
+              type: object
+              properties:
+                height:
+                  type: string
+                  description: Clutter object height in m
+                  example: '4'
+                material:
+                  type: string
+                  description: 'Clutter object material. The material code/type/attenuation options are: 1 Tree/s:0.25; 2 Trees:0.5; 3 Timber:1.0; 4\tTimber:1.5; 5\tBrick:1.5; 6\tBrick:2.0; 7\tConcrete:3.0; 8\tConcrete:4.0; 9\tMetal:6.0.;'
+                  enum:
+                  - '1'
+                  - '2'
+                  - '3'
+                  - '4'
+                  - '5'
+                  - '6'
+                  - '7'
+                  - '8'
+                  - '9'
+                  example: '1'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: key
-externalDocs:
-  description: CloudRF Developer Documentation
-  url: https://cloudrf.com/documentation/developer/
+      description: An APIKey passed in the request headers.

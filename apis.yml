@@ -147,11 +147,9 @@ apis:
     url: https://github.com/Cloud-RF/CloudRF-API-clients
 - aid: cloudrf:cloudrf-3-d-api
   name: CloudRF 3 D API
-  description: 3D coverage and model upload operations.
+  description: This set of endpoints allows the user to interact with the 3D processing engine.
   humanURL: https://cloudrf.com/documentation/developer/
   tags:
-  - 3D
-  tags_raw:
   - 3 D
   properties:
   - type: OpenAPI

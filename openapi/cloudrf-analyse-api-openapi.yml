@@ -1,81 +1,927 @@
 openapi: 3.2.0
 info:
   title: CloudRF Analyse API
-  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
-  version: '1.0'
+  description: The CloudRF API enables users to model and test radio propagation for any radio, anywhere. Authenticate by passing your API key in the request header as `key`. Set up a CloudRF.com account to generate this key. All data is transferred as JSON. For detailed documentation, visit docs.cloudrf.com.
+  termsOfService: https://cloudrf.com/terms-and-conditions/
   contact:
-    name: CloudRF
-    url: https://cloudrf.com
-  license:
-    name: Proprietary
-    url: https://cloudrf.com/terms
+    email: support@cloudrf.com
+  version: '3.36'
 servers:
 - url: https://api.cloudrf.com
-  description: Production
+  description: Production environment
 - url: https://dev.cloudrf.com
-  description: Development
+  description: Development environment
 security:
 - ApiKeyAuth: []
 tags:
 - name: Analyse
-  description: Analyse calculations including best-site, best-server, interference, merge, and signal location.
+  description: This set of endpoints allows the user to use and analyse information from pre-defined networks and layers.
 paths:
-  /best-site:
+  /bsa:
     post:
-      operationId: analyseBestSite
-      summary: Best site within an area
-      description: Identify the optimal transmitter site within a specified area.
+      operationId: bsa
       tags:
       - Analyse
+      summary: Find the best site within an area
+      description: 'The best site analysis (BSA) endpoint can be used to find the best locations in a wider area for a transmitter.
+
+        It uses a GPU accelerated Monte Carlo simulation with hundreds of random locations to compare and grade radio intervisibility.
+
+        Please note that the response of a BSA calculation is not signal strength. It is a normalised heatmap, relative to the best site, with settings for a user defined transmitter.
+
+        For best results, focus onto a single feature, like a valley or a ridge, not an entire mountain range.
+
+
+        There are two methods to define an area of interest for a BSA caluclation:
+
+
+        1. Specify the `transmitter.lat` and `transmitter.lon`, along with the `output.rad` to define the circular area of interest.
+
+        2. Pass in an array of `edges`, each with a `lat` and `lon` which defines the area of interest. When using this method, you should ensure that the `transmitter.lat` and `transmitter.lon` are not set.
+
+
+        The response for BSA is a greyscale image.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                site:
+                  description: Name of site.
+                  type: string
+                  default: BSA
+                  minLength: 1
+                  maxLength: 24
+                network:
+                  description: Network name/group.
+                  type: string
+                  default: BSA
+                  minLength: 1
+                  maxLength: 24
+                transmitter:
+                  $ref: '#/components/schemas/Transmitter'
+                edges:
+                  description: An array of edges which can be used to define a bounding box for your area of interest for BSA. When using this please remove your transmitter.lat and transmitter.lon values.
+                  properties:
+                    lat:
+                      description: Latitude of edge in WGS84 decimal degrees.
+                      type: number
+                      format: float
+                      minimum: -89
+                      maximum: 89
+                      default: 0
+                      example: 0
+                    lon:
+                      description: Longitude of edge in WGS84 decimal degrees.
+                      type: number
+                      format: float
+                      minimum: -180
+                      maximum: 180
+                      default: 0
+                      example: 0
+                  example:
+                  - lat: 38.90932
+                    lon: 1.43935
+                  - lat: 38.902789
+                    lon: 1.436619
+                  - lat: 38.905711
+                    lon: 1.424938
+                  - lat: 38.903652
+                    lon: 1.419708
+                  - lat: 38.911647
+                    lon: 1.42024
+                  - lat: 38.910872
+                    lon: 1.434714
+                antenna:
+                  $ref: '#/components/schemas/Antenna'
+                receiver:
+                  type: object
+                  properties:
+                    alt:
+                      description: Altitude of receiver above ground level in `metric` or `imperial`. Distance unit set in `output` object.
+                      type: number
+                      format: integer
+                      minimum: 1
+                      maximum: 120000
+                      default: 1
+                      example: 1
+                    rxg:
+                      description: Receiver antenna gain in dBi.
+                      type: number
+                      format: float
+                      minimum: -10
+                      maximum: 60
+                      default: 2.15
+                      example: 3
+                output:
+                  type: object
+                  properties:
+                    units:
+                      description: 'Define global distance units applied to heights and distances:
+
+                        * `metric` - Define units in meters and kilometers.
+
+                        * `imperial` - Define units in feet and miles.
+
+                        '
+                      type: string
+                      default: metric
+                      enum:
+                      - metric
+                      - imperial
+                    res:
+                      description: Resolution in meters for produced output. A high resolution (eg. 2m) is much slower than a medium resolution (eg. 20m) for area calculations.
+                      type: number
+                      format: integer
+                      minimum: 1
+                      maximum: 300
+                      default: 10
+                      example: 20
+                    rad:
+                      description: Radius in kilometers for output. This is how far the area of your BSA calculation you wish to reach.
+                      type: number
+                      format: float
+                      minimum: 0.03
+                      maximum: 400
+                      default: 5
+                      example: 5
       responses:
         '200':
-          description: Best-site result.
+          description: Success - JSON object returned containing greyscale image URLs, color key values, and calculation statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the results of the /bsa call.
+                properties:
+                  tiff:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/archive/bjdRdXlOUUpJV0FEOGpwUFh5bS91QT09/tiff
+                  tiff_3857:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the Mercartor projection standard.
+                    example: https://api.cloudrf.com/archive/bjdRdXlOUUpJV0FEOGpwUFh5bS91QT09/tiff-3857
+                  tiff_4326:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/archive/bjdRdXlOUUpJV0FEOGpwUFh5bS91QT09/tiff
+                  kmz:
+                    type: string
+                    format: uri
+                    description: URL to KMZ file.
+                    example: https://api.cloudrf.com/archive/bjdRdXlOUUpJV0FEOGpwUFh5bS91QT09/kmz
+                  shp:
+                    type: string
+                    format: uri
+                    description: URL to ESRI Shapefile.
+                    example: https://api.cloudrf.com/archive/bjdRdXlOUUpJV0FEOGpwUFh5bS91QT09/shp
+                  json:
+                    type: string
+                    format: uri
+                    description: URL to GeoJSON.
+                    example: https://api.cloudrf.com/archive/bjdRdXlOUUpJV0FEOGpwUFh5bS91QT09/json
+                  zip:
+                    type: string
+                    format: uri
+                    description: URL to ATAK Mission Package.
+                    example: https://api.cloudrf.com/archive/bjdRdXlOUUpJV0FEOGpwUFh5bS91QT09/zip
+                  url:
+                    type: string
+                    format: uri
+                    description: URL to view layer on a map in a browser.
+                    example: https://api.cloudrf.com/archive/calc?id=bjdRdXlOUUpJV0FEOGpwUFh5bS91QT09
+                  PNG_Mercator:
+                    type: string
+                    format: uri
+                    description: URL to PNG image file applying the Mercartor projection standard.
+                    example: https://api.cloudrf.com/output/projection/3857/1/0805143742_BSA_BSA
+                  PNG_WGS84:
+                    type: string
+                    format: uri
+                    description: URL to PNG image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/users/1/0805143742_BSA_BSA.4326.png
+                  bounds:
+                    type: array
+                    description: A list of image bounds as WGS84 decimal degrees. Order is clockwise from North,East,South,West.
+                    items:
+                      type: integer
+                      format: float
+                      example:
+                      - 38.96091398221914
+                      - 1.5057877843205172
+                      - 38.871086017780854
+                      - 1.3902122156794827
+                  id:
+                    type: string
+                    description: Unique system identifier for the calculation. This is a one-up number from the main log table.
+                    example: 4371076
+                  sid:
+                    type: string
+                    description: Private unique system identifier for the calculation. This is a hash of the one-up number from the main log table intended for public maps etc.
+                    example: bjdRdXlOUUpJV0FEOGpwUFh5bS91QT09
+                  area:
+                    type: string
+                    description: Coverage area measured in kilometers squared.
+                    example: 0
+                  coverage:
+                    type: string
+                    description: Site efficiency computed from requested radius versus actual coverage area. A perfect circle out at sea would be 100% efficient.
+                    example: 0
+                  key:
+                    type: array
+                    description: Array of objects describing the RGB color schema as signal level in %, red, green and blue where red would be rgb(255,0,0).
+                    items:
+                      type: object
+                      properties:
+                        l:
+                          type: string
+                          description: Best site value percentage
+                          example: 70%
+                        r:
+                          description: RED colour intensity. 0 to 255.
+                          type: integer
+                          example: 255
+                        g:
+                          description: GREEN colour intensity. 0 to 255.
+                          type: integer
+                          example: 19
+                        b:
+                          description: BLUE colour intensity. 0 to 255.
+                          type: integer
+                          example: 0
+                      example:
+                      - l: 100%
+                        r: 107
+                        g: 254
+                        b: 1
+                      - l: 90%
+                        r: 147
+                        g: 251
+                        b: 5
+                      - l: 80%
+                        r: 184
+                        g: 248
+                        b: 8
+                      - l: 70%
+                        r: 219
+                        g: 244
+                        b: 12
+                      - l: 60%
+                        r: 241
+                        g: 230
+                        b: 16
+                      - l: 50%
+                        r: 237
+                        g: 192
+                        b: 20
+                      - l: 40%
+                        r: 234
+                        g: 157
+                        b: 23
+                      - l: 30%
+                        r: 230
+                        g: 124
+                        b: 27
+                      - l: 20%
+                        r: 227
+                        g: 64
+                        b: 34
+                      - l: 10%
+                        r: 223
+                        g: 64
+                        b: 34
+                      - l: 00%
+                        r: 220
+                        g: 38
+                        b: 38
+                  elapsed:
+                    description: Time taken for API call (milliseconds).
+                    type: number
+                    format: int32
+                    example: 1572
+                  balance:
+                    description: API call credit usage. Only applies to public system.
+                    type: integer
+                    format: int32
+                    example: 1
   /merge:
     get:
-      operationId: analyseMerge
-      summary: Merge calculations
-      description: Consolidate multiple sites into a super coverage layer.
+      operationId: merge
       tags:
       - Analyse
+      summary: Merge sites into a super layer
+      description: 'This endpoint returns a consolidated layer of many `area` calculations as a single super layer.
+
+        Stronger signals are promoted over weaker ones regardless of colour schema but units must match eg. dBm.
+
+        Merging a dozen sites should take only a few seconds.
+
+        Merging a large network or at very high resolution can take minutes. If you experience a timeout on a long running API request it can still succeed later if you check back in your archive.'
+      parameters:
+      - in: query
+        name: network
+        schema:
+          type: string
+          description: Network name.
+          example: 100_repeaters_nationwide.
+        required: true
+      - in: query
+        required: true
+        name: name
+        schema:
+          type: string
+          description: Super layer name.
+          example: National_map
       responses:
         '200':
-          description: Merged layer.
+          description: Success.
   /interference:
     post:
-      operationId: analyseInterference
-      summary: Network interference
-      description: Detect interference between two networks.
+      operationId: interference
       tags:
       - Analyse
+      summary: Find interference for two networks
+      description: This endpoint compares a set pre-calculated 'signal' sites with a set of pre-calculated 'noise' sites to calculate the Jamming-to-Signal ratio, considering frequency, power and bandwidth. Signal sites can be specified with either a network name `s_network` or an array of site names `s_sites`, jammers are specified similarly with `j_network` and `j_sites`.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                s_network:
+                  description: Name of the 'signal' network.
+                  type: string
+                  example: MyNetwork
+                s_sites:
+                  description: A list of 'signal' sites.
+                  type: array
+                  items:
+                    type: string
+                  example:
+                  - 1125164804_MyNetwork_A
+                  - 1125164815_MyNetwork_B
+                j_network:
+                  description: Name of the 'noise' network.
+                  type: string
+                  example: OtherNetwork
+                j_sites:
+                  description: A list of "noise" sites which are potentially interfering.
+                  type: array
+                  items:
+                    type: string
+                  example:
+                  - 1125164804_OtherNetwork_A
+                  - 1125164815_OtherNetwork_B
+                name:
+                  description: Interference layer name.
+                  type: string
+                  example: InterferenceExample
+                colour_key:
+                  description: Colour key name.
+                  type: string
+                  example: JS.dB
       responses:
         '200':
-          description: Interference report.
-  /best-server:
+          description: Success - JSON object returned containing image URLs, colour key values, and calculation statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the results of the /interference call.
+                properties:
+                  tiff:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz10/tiff
+                  tiff_3857:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the Mercartor projection standard.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz10/tiff-3857
+                  tiff_4326:
+                    type: string
+                    format: uri
+                    description: URL to GeoTIFF image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz10/tiff
+                  kmz:
+                    type: string
+                    format: uri
+                    description: URL to KMZ file.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz10/kmz
+                  shp:
+                    type: string
+                    format: uri
+                    description: URL to Shapefile.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz10/shp
+                  json:
+                    type: string
+                    format: uri
+                    description: URL to GeoJSON.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz10/json
+                  zip:
+                    type: string
+                    format: uri
+                    description: URL to ATAK Mission Package.
+                    example: https://api.cloudrf.com/archive/bjRRWno0aUF3ekN2QW9ISWc2UlcrZz10/zip
+                  url:
+                    type: string
+                    format: uri
+                    description: URL to view layer on a map in a browser.
+                    example: https://api.cloudrf.com/archive/calc?id=bjRRWno0aUF3ekN2QW9ISWc2UlcrZz10
+                  PNG_Mercator:
+                    type: string
+                    format: uri
+                    description: URL to PNG image file applying the Mercartor projection standard.
+                    example: https://api.cloudrf.com/output/projection/3857/1/1126153752_InterferenceExample_QRM
+                  PNG_WGS84:
+                    type: string
+                    format: uri
+                    description: URL to PNG image file applying the WGS84 standard.
+                    example: https://api.cloudrf.com/users/1/1126153752_InterferenceExample_QRM.4326.png
+                  bounds:
+                    type: array
+                    description: A list of image bounds as WGS84 decimal degrees. Order is clockwise from North,East,South,West.
+                    items:
+                      type: integer
+                      format: float
+                      example:
+                      - 51.99872
+                      - -2.186565
+                      - 51.78911
+                      - -2.396179
+                  id:
+                    type: string
+                    description: Unique system identifier for the calculation. This is a one-up number from the main log table.
+                    example: 3930917
+                  sid:
+                    type: string
+                    description: Private unique system identifier for the calculation. This is a hash of the one-up number from the main log table intended for public maps etc.
+                    example: bjRRWno0aUF3ekN2QW9ISWc2UlcrZz10
+                  key:
+                    type: array
+                    description: Array of objects describing the RGB color schema as signal level in dB/dBm/dBuV, red, green and blue where red would be rgb(255,0,0).
+                    items:
+                      type: object
+                      properties:
+                        l:
+                          type: string
+                          description: Received signal power in dBm
+                          example: -20dBm
+                        r:
+                          description: RED colour intensity. 0 to 255.
+                          type: integer
+                          example: 255
+                        g:
+                          description: GREEN colour intensity. 0 to 255.
+                          type: integer
+                          example: 19
+                        b:
+                          description: BLUE colour intensity. 0 to 255.
+                          type: integer
+                          example: 0
+                      example:
+                      - l: 12dB
+                        r: 254
+                        g: 0
+                        b: 0
+                      - l: 11dB
+                        r: 254
+                        g: 21
+                        b: 0
+                      - l: 10dB
+                        r: 254
+                        g: 43
+                        b: 0
+                      - l: 9dB
+                        r: 254
+                        g: 64
+                        b: 0
+                      - l: 8dB
+                        r: 254
+                        g: 85
+                        b: 0
+                      - l: 7dB
+                        r: 254
+                        g: 106
+                        b: 0
+                      - l: 6dB
+                        r: 254
+                        g: 128
+                        b: 0
+                      - l: 5dB
+                        r: 254
+                        g: 149
+                        b: 0
+                      - l: 4dB
+                        r: 254
+                        g: 170
+                        b: 0
+                      - l: 3dB
+                        r: 254
+                        g: 191
+                        b: 0
+                      - l: 2dB
+                        r: 254
+                        g: 212
+                        b: 0
+                      - l: 1dB
+                        r: 254
+                        g: 234
+                        b: 0
+                      - l: 0dB
+                        r: 254
+                        g: 254
+                        b: 0
+                      - l: -1dB
+                        r: 234
+                        g: 254
+                        b: 0
+                      - l: -2dB
+                        r: 213
+                        g: 254
+                        b: 0
+                      - l: -3dB
+                        r: 191
+                        g: 254
+                        b: 0
+                      - l: -4dB
+                        r: 170
+                        g: 254
+                        b: 0
+                      - l: -5dB
+                        r: 149
+                        g: 254
+                        b: 0
+                      - l: -6dB
+                        r: 128
+                        g: 254
+                        b: 0
+                      - l: -7dB
+                        r: 106
+                        g: 254
+                        b: 0
+                      - l: -8dB
+                        r: 85
+                        g: 254
+                        b: 0
+                      - l: -9dB
+                        r: 64
+                        g: 254
+                        b: 0
+                      - l: -10dB
+                        r: 43
+                        g: 254
+                        b: 0
+                      - l: -11dB
+                        r: 21
+                        g: 254
+                        b: 0
+                      - l: -12dB
+                        r: 0
+                        g: 254
+                        b: 0
+                  elapsed:
+                    description: Time taken for API call (milliseconds).
+                    type: number
+                    format: int32
+                    example: 1572
+                  balance:
+                    description: API call credit usage. Only applies to public system.
+                    type: integer
+                    format: int32
+                    example: 1
+                  calculation_adjusted:
+                    type: array
+                    description: An array of messages indicating if a calculation was adjusted due to account limitations or restrictions on settings.
+                    items:
+                      type: string
+                    example:
+                    - Removing site '1125164804_testJ_A' from jammer list as it exists in signal list
+                  resolution:
+                    description: The resolution of the output image (meters).
+                    type: number
+                    example: 10
+                  percentage_above_js:
+                    type: array
+                    description: Array of objects with the percentage of the signal that is above a certain JS ratio.
+                    items:
+                      type: object
+                      properties:
+                        js:
+                          type: number
+                          description: A Jamming-Signal ratio.
+                          example: 3
+                        percentage:
+                          type: integer
+                          description: The percentage of pixels above the JS ratio.
+                          example: 43.704340352385046
+                    example:
+                    - js: 12
+                      percentage: 0
+                    - js: 9
+                      percentage: 0.3437902879243661
+                    - js: 6
+                      percentage: 0.9454232917920069
+                    - js: 3
+                      percentage: 3.1800601633003867
+                    - js: 0
+                      percentage: 21.22905027932961
+                    - js: -3
+                      percentage: 43.704340352385046
+                    - js: -6
+                      percentage: 73.31327889987108
+                    - js: -9
+                      percentage: 89.42844864632575
+                    - js: -12
+                      percentage: 95.05801461108723
+  /network:
     get:
-      operationId: analyseBestServer
-      summary: Best server for receiver
-      description: Locate the best server for a given receiver location.
+      operationId: network
       tags:
       - Analyse
+      summary: Find the best server for a receiver
+      description: This endpoint allows users to query the network to find the best server(s) for a given receiver/customer location. A previously generated network is required. This method returns more data than the points API as it includes the arrays for terrain, landcover, obstructions, and path loss for each server.
+      parameters:
+      - in: query
+        required: true
+        description: Network name.
+        name: net
+        schema:
+          type: string
+      - in: query
+        required: true
+        description: Super layer name.
+        name: nam
+        schema:
+          type: string
+      - in: query
+        required: true
+        description: Latitude in decimal degrees.
+        name: lat
+        schema:
+          type: number
+          format: float
+      - in: query
+        required: true
+        description: Longitude in decimal degrees.
+        name: lon
+        schema:
+          type: number
+          format: float
+      - in: query
+        required: true
+        description: Height above ground level in meters.
+        name: alt
+        schema:
+          type: number
+          format: float
+      - in: query
+        required: false
+        description: Receiver gain in dBi.
+        name: rxg
+        schema:
+          type: number
+          format: float
       responses:
         '200':
-          description: Best server.
-  /locate:
+          description: Success - JSON object returned providing results with a detailed path-profile output for each server.
+          content: {}
+  /trilateration:
     post:
-      operationId: analyseLocate
-      summary: Geo-locate a signal
-      description: Geo-locate a signal source using a set of power measurements.
+      operationId: trilateration
       tags:
       - Analyse
+      summary: Geo-locate a signal using received power measurements
+      description: This endpoint allows users to query sites to find areas of mutual interest where a signal might be. It uses receiver power measurements (including nil returns) and modelling to produce a much more accurate output than legacy trilateration using circles. The accuracy is determined by both the modelling and the errordB value which lets users specify trilateration error. About 10dB is recommended.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                colourKey:
+                  description: Colour key name. Recommended value is 9 (Greyscale)
+                  type: string
+                  example: 9
+                errordB:
+                  description: Trilateration error in decibels. This should be set with care as too low will produce no matches and too high will show signals everywhere. Recommend 10dB.
+                  type: number
+                  format: float
+                  example: 10
+                connected:
+                  description: Array of sites and rssi values from where a signal has been detected
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      site:
+                        description: Unique filename for the site
+                        type: string
+                        example: 0320153726_Trilateration-demo_A
+                      rssi:
+                        description: Received signal strength from the site in dBm
+                        type: number
+                        format: float
+                        example: -90
+                disconnected:
+                  description: Array of sites from where a signal has NOT been detected
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      site:
+                        description: Unique filename for the site
+                        type: string
+                        example: 0320153755_Trilateration-demo_B
       responses:
         '200':
-          description: Estimated location.
+          description: Success - JSON object returned providing results with a PNG URL, Web mercator bounds and area metadata.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: An object containing the results of the /trilateration call designed for a web mercator map
+                properties:
+                  areaKm2:
+                    type: number
+                    format: float
+                    description: Search area measured in square kilometers
+                    example: 0.1
+                  areaPx:
+                    type: number
+                    format: float
+                    description: Number of covered pixels
+                    example: 77
+                  pngUrl:
+                    type: string
+                    format: uri
+                    description: URL to EPSG 3857 image file applying the Mercartor projection standard.
+                    example: https://api.cloudrf.com/users/1/GEO/1710949057.png
+                  pngBounds:
+                    type: array
+                    description: A list of image bounds as WGS84 decimal degrees. Order is clockwise from North,East,South,West.
+                    items:
+                      type: integer
+                      format: float
+                      example:
+                      - 38.942844475233805
+                      - 1.4826338797780443
+                      - 38.88915552476619
+                      - 1.413357814658543
 components:
+  schemas:
+    Transmitter:
+      type: object
+      properties:
+        lat:
+          description: Latitude of transmitter in WGS84 decimal degrees.
+          type: number
+          format: float
+          minimum: -89
+          maximum: 89
+          default: 38.916
+          example: 38.916
+        lon:
+          description: Longitude of transmitter in WGS84 decimal degrees.
+          type: number
+          format: float
+          minimum: -180
+          maximum: 180
+          default: 1.448
+          example: 1.448
+        alt:
+          description: Altitude of transmitter above ground level in `metric` or `imperial`. Distance unit set in `output` object.
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 120000
+          default: 1
+          example: 1
+        frq:
+          description: Center frequency in megahertz.
+          type: number
+          format: float
+          minimum: 2
+          maximum: 100000
+          default: 868
+          example: 868
+        txw:
+          description: Transmitter power in watts before the antenna.
+          type: number
+          format: float
+          minimum: 0.001
+          maximum: 2000000
+          default: 0.1
+          example: 0.1
+        bwi:
+          description: "Bandwidth in MHz. \n* 1MHz has a noise floor of -114dBm\n* 10MHz has a noise floor of -104dBm\n* 20MHz has a noise floor of -101dBm\n"
+          type: number
+          format: float
+          minimum: 0.001
+          maximum: 200
+          default: 0.1
+          example: 1
+    Antenna:
+      type: object
+      properties:
+        txg:
+          description: Transmitter antenna gain in dBi. A half-wave dipole has a gain of 2.15dBi. A mobile phone is 0 to 2dBi, depending on the frequency.
+          type: number
+          format: float
+          minimum: -10
+          maximum: 60
+          default: 2.15
+          example: 2.15
+        txl:
+          description: Feeder loss in dB. A long feeder has more loss. Loss varies by material and wavelength eg. LMR-400
+          type: number
+          format: float
+          minimum: 0
+          maximum: 60
+          default: 0
+          example: 1
+        ant:
+          description: 'Antenna pattern code:
+
+            * `0` - Allows custom options (see: `hbw`; `vbw`; `fbr`)
+
+            * `1` - Vertical dipole (omni-directional)
+
+            '
+          type: number
+          format: integer
+          default: 1
+          example: 39
+          enum:
+          - 0
+          - 1
+        azi:
+          description: 'Antenna azimuth in degrees North.
+
+            You can use more than one azimuth at a time to simulate the same antenna pointing in different directions. To do this please use a comma-separated list, for example `0,120,240` would simulate 3 antennas spaced 120 degrees apart from true North. You can enter up to a maximum of 20 azimuth values.
+
+            '
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 360
+          default: 0
+          example: 0
+        tlt:
+          description: Antenna tilt in degrees below the horizon (inverted) where horizon is `0`.
+          type: number
+          format: float
+          minimum: -90
+          maximum: 90
+          default: 0
+          example: 0
+        hbw:
+          description: Custom antenna horizontal beamwidth in degrees. For use only with `ant` value of `0`.
+          type: number
+          format: float
+          minimum: 0
+          maximum: 360
+          default: 0
+          example: 120
+        vbw:
+          description: Custom antenna vertical beamwidth in degrees. For use only with `ant` value of `0`.
+          type: number
+          format: float
+          minimum: 0
+          maximum: 360
+          default: 0
+          example: 30
+        fbr:
+          description: Front-to-back ratio measured in dB. A highly directional antenna will have a high FBR.
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 60
+          default: 0
+          example: 0
+        pol:
+          description: 'Antenna polarization:
+
+            * `v` - Vertical
+
+            * `h` - Horizontal
+
+            '
+          type: string
+          enum:
+          - v
+          - h
+          default: v
+          example: v
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: key
-externalDocs:
-  description: CloudRF Developer Documentation
-  url: https://cloudrf.com/documentation/developer/
+      description: An APIKey passed in the request headers.

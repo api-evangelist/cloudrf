@@ -1,50 +1,1058 @@
 openapi: 3.2.0
 info:
   title: CloudRF Template API
-  description: Public REST API for RF propagation modeling, coverage analysis, mesh and multisite planning, HF propagation, 3D coverage, satellite modeling, interference detection, signal geo-location, archive and export, clutter and noise data, and reusable templates. Operations, paths, and methods are documented in the CloudRF developer guide and Swagger UI.
-  version: '1.0'
+  description: The CloudRF API enables users to model and test radio propagation for any radio, anywhere. Authenticate by passing your API key in the request header as `key`. Set up a CloudRF.com account to generate this key. All data is transferred as JSON. For detailed documentation, visit docs.cloudrf.com.
+  termsOfService: https://cloudrf.com/terms-and-conditions/
   contact:
-    name: CloudRF
-    url: https://cloudrf.com
-  license:
-    name: Proprietary
-    url: https://cloudrf.com/terms
+    email: support@cloudrf.com
+  version: '3.36'
 servers:
 - url: https://api.cloudrf.com
-  description: Production
+  description: Production environment
 - url: https://dev.cloudrf.com
-  description: Development
+  description: Development environment
 security:
 - ApiKeyAuth: []
 tags:
 - name: Template
-  description: User and system templates.
+  description: This set of endpoints allow the user to manage reusable radio templates with pre-defined values.
 paths:
-  /template:
+  /templates:
     get:
-      operationId: listTemplates
-      summary: List templates
-      description: List custom user templates.
       tags:
       - Template
+      summary: Get custom templates for your account
+      description: Get an array of all custom templates which have been created by your user account.
       responses:
         '200':
-          description: Templates.
+          description: Success - JSON response containing an array of objects of custom templates.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      format: integer
+                      description: ID of the custom template.
+                      example: 59816
+                    name:
+                      type: string
+                      description: Name of the custom template.
+                example:
+                - id: 63522
+                  name: WALK_TALK
+                - id: 78273
+                  name: RAD1
+      operationId: getTemplates
+      x-operation-id-source: derived
+  /templates/system:
+    get:
+      tags:
+      - Template
+      summary: Get system templates which available
+      description: Get an array of all system templates which are available on the system.
+      responses:
+        '200':
+          description: Success - JSON response containing an array of system template names.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  description: Name of system template.
+                  example: MPU5
+                example:
+                - TW-900
+                - TW-950
+                - MPU5
+      operationId: getTemplatesSystem
+      x-operation-id-source: derived
+  /templates/favourites:
+    get:
+      tags:
+      - Template
+      summary: Get templates favourited by your account
+      description: Get an array of system templates which have been favourited by your user account.
+      responses:
+        '200':
+          description: Success - JSON response containing an array of favourited system templates.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the favourited system template.
+                      example: MPU5
+                example:
+                - name: MPU5
+                - name: TW-900
+      operationId: getTemplatesFavourites
+      x-operation-id-source: derived
+  /template/{id}:
+    get:
+      operationId: getTemplate
+      tags:
+      - Template
+      summary: Get a template's details
+      description: 'Get the content of a template. This is requested in one of 2 ways:
+
+        * Specifying the `id` of the custom template which you have previously created.
+
+        * Specifying the `name` of the system template which is available. **Please note that some system templates may not have the same number of response values as a custom template.**'
+      parameters:
+      - in: path
+        required: true
+        name: id
+        description: The `id` of a custom template which has been created, or the `name` of a system template which is available.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success - JSON response containing an object of the requested template.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+                    description: The version of the template.
+                    example: CloudRF-API-v3.4.0
+                  reference:
+                    type: string
+                    description: An online reference which can be used to look up what each of the values in the template mean.
+                    example: https://cloudrf.com/documentation/developer/
+                  template:
+                    type: object
+                    description: Contains some metadata about the template which can be used to identify it and make better use of it.
+                    properties:
+                      name:
+                        type: string
+                        description: The name of the template.
+                        example: MPU5
+                      service:
+                        type: string
+                        description: Where the template was created.
+                        example: Cloud-RF https://api.cloudrf.com
+                      created_at:
+                        type: string
+                        description: ISO8601 timestamp of when the template was created.
+                        example: '2022-10-25T09:49:49+00:00'
+                      owner:
+                        type: number
+                        format: integer
+                        description: User ID of the template creator/owner.
+                        example: 1
+                      bom_value:
+                        type: number
+                        description: Value of the template which can be used as part of a bill of materials.
+                        example: 0
+                  site:
+                    type: string
+                    description: Site name
+                    example: Site
+                  network:
+                    type: string
+                    description: Network name
+                    example: Network
+                  engine:
+                    type: number
+                    format: integer
+                    description: 'The processing engine associated with the template.
+
+                      * `1` - GPU
+
+                      * `2` - CPU
+
+                      '
+                    example: 2
+                  coordinates:
+                    type: number
+                    format: integer
+                    description: 'The coordinates system associated with the template.
+
+                      * `1` - Decimal Degrees
+
+                      * `2` - Degrees Minutes Seconds
+
+                      * `3` - MGRS / UTM
+
+                      '
+                    example: 1
+                  transmitter:
+                    type: object
+                    properties:
+                      lat:
+                        description: Latitude of transmitter in WGS84 decimal degrees.
+                        type: number
+                        format: float
+                        example: 38.913
+                      lon:
+                        description: Longitude of transmitter in WGS84 decimal degrees.
+                        type: number
+                        format: float
+                        example: 1.44
+                      alt:
+                        description: Altitude of transmitter above ground level.
+                        type: number
+                        format: integer
+                        example: 1
+                      frq:
+                        description: Center frequency in megahertz.
+                        type: number
+                        format: integer
+                        example: 446
+                      txw:
+                        description: Transmitter power in watts before the antenna.
+                        type: number
+                        format: float
+                        example: 1
+                      bwi:
+                        description: Bandwidth in MHz.
+                        type: number
+                        format: float
+                        example: 0.1
+                      powerUnit:
+                        description: The RF power unit being used, either `W` or `dBm`
+                        type: string
+                        example: W
+                  receiver:
+                    $ref: '#/components/schemas/Receiver'
+                  feeder:
+                    type: object
+                    properties:
+                      flt:
+                        description: The feeder line type.
+                        type: number
+                        format: integer
+                        example: 1
+                      fll:
+                        description: The feeder line length.
+                        type: number
+                        format: integer
+                        example: 0
+                      fcc:
+                        description: The feeder line number of connectors.
+                        type: number
+                        format: integer
+                        example: 0
+                  antenna:
+                    type: object
+                    properties:
+                      mode:
+                        description: 'The type of template which is being used:
+
+                          * `template` is a pre-defined template of known pattern.
+
+                          * `custom` is a custom template which will be built based on values.
+
+                          '
+                        type: string
+                        example: template
+                      txg:
+                        description: Antenna gain
+                        type: number
+                        format: float
+                        example: 2.15
+                      txl:
+                        description: Antenna feeder loss
+                        type: number
+                        format: float
+                        example: 0
+                      ant:
+                        description: Identifier of antenna if `mode` is `template`
+                        type: number
+                        format: integer
+                        example: 39
+                      azi:
+                        description: Antenna azimuth in degrees North.
+                        example: 0
+                      tlt:
+                        description: Antenna tilt in degrees below the horizon (inverted) where horizon is `0`.
+                        type: number
+                        format: integer
+                        example: 0
+                      hbw:
+                        description: Custom antenna horizontal beamwidth in degrees.
+                        type: number
+                        format: integer
+                        example: 120
+                      vbw:
+                        description: Custom antenna vertical beamwidth in degrees.
+                        type: number
+                        format: integer
+                        example: 120
+                      fbr:
+                        description: Front-to-back ratio measured in dB.
+                        type: number
+                        format: float
+                        example: 2.15
+                      pol:
+                        description: 'Antenna polarization:
+
+                          * `v` - Vertical
+
+                          * `h` - Horizontal
+
+                          '
+                        type: string
+                        example: v
+                  model:
+                    type: object
+                    properties:
+                      pm:
+                        description: "Propagation model:\n* `1` - Irregular Terrain Model (ITM) (Longley-Rice)\n* `2` - Line of Sight (LOS)\n* `3` - Okumura-Hata \n* `4` - ITU-R P.1812\n* `5` - SUI Microwave\n* `6` - COST231-Hata\n* `7` - ITU-R P.525 (Free space path loss)\n* `8` - RADAR\n* `9` - Ericsson 9999\n* `10` - General Purpose\n* `11` - Egli VHF/UHF\n* `12` - HF NVIS\n"
+                        type: number
+                        format: integer
+                        example: 1
+                      pe:
+                        description: 'Propagation model subtype (environment):
+
+                          * `1` - Conservative (Urban)
+
+                          * `2` - Average (Suburban)
+
+                          * `3` - Optimistic (Rural)
+
+                          '
+                        type: number
+                        format: integer
+                        example: 2
+                      ked:
+                        description: 'Include knife edge diffraction for enhancing models with NLOS coverage :
+
+                          * `0` - Diffraction disabled.
+
+                          * `1` - Knife-edge diffraction enabled.
+
+                          * `2` - Bullington diffraction enabled.
+
+                          * `3` - Giovanelli diffraction enabled.
+
+                          * `4` - Deygout diffraction enabled.
+
+                          * `5` - Epstein-Peterson diffraction enabled.
+
+                          '
+                        type: number
+                        format: integer
+                        example: 1
+                      rel:
+                        description: Model reliability (fade margin) represented as a percentage (%).
+                        type: number
+                        format: integer
+                        example: 90
+                  environment:
+                    $ref: '#/components/schemas/Environment'
+                  output:
+                    type: object
+                    properties:
+                      units:
+                        description: 'Define global distance units applied to heights and distances:
+
+                          * `m` - metric.
+
+                          * `f` - imperial.
+
+                          '
+                        type: string
+                        example: m
+                      col:
+                        description: Colour schema code OR filename string of your chosen output colour schema.
+                        example: RAINBOW.dBm
+                      out:
+                        description: 'Measured units:
+
+                          * `1` - Path loss (dB)
+
+                          * `2` - Received power (dBm)
+
+                          * `3` - Field strength (dBuV)
+
+                          * `4` - Signal-to-Noise Ratio (dB)
+
+                          * `5` - Bit-Error-Rate (BER)
+
+                          * `6` - Reference Signal Received Power (dBm)
+
+                          * `7` - Best site analysis (%)
+
+                          * `8` - Throughput (Mbps)
+
+                          * `9` - Throughput (kbps)
+
+                          '
+                        type: number
+                        format: integer
+                        example: 2
+                      ber:
+                        description: 'Bit-Error-Rate:
+
+                          * `1` - 0.1 / 10e-1
+
+                          * `2` - 0.01 / 10e-2
+
+                          * `3` - 0.001 / 10e-3
+
+                          * `4` - 0.0001 / 10e-4
+
+                          * `5` - 0.00001 / 10e-5
+
+                          * `6` - 0.000001 / 10e-6
+
+
+                          LoRa Spread Factors:
+
+                          * `7` - LoRa SF7 / 5469bps
+
+                          * `8` - LoRa SF8 / 3125bps
+
+                          * `9` - LoRa SF9 / 1758bps
+
+                          * `10` - LoRa SF10 / 977bps
+
+                          * `11` - LoRa SF11 / 537bps
+
+                          * `12` - LoRa SF12 / 293bps
+
+                          '
+                        type: number
+                        format: integer
+                        example: 2
+                      mod:
+                        description: 'Modulation as combined with the `ber` value:
+
+                          * `1` - 4QAM
+
+                          * `2` - 16QAM
+
+                          * `3` - 64QAM
+
+                          * `4` - 256QAM
+
+                          * `5` - 1024QAM
+
+                          * `6` - BPSK
+
+                          * `7` - QPSK
+
+                          * `8` - 8PSK
+
+                          * `9` - 16PSK
+
+                          * `10` - 32PSK
+
+                          * `11` - LoRa
+
+                          '
+                        type: number
+                        format: integer
+                        example: 7
+                      nf:
+                        description: Noise floor.
+                        type: number
+                        format: float
+                        example: -100
+                      res:
+                        description: Resolution in meters for produced output.
+                        type: number
+                        format: integer
+                        example: 20
+                      rad:
+                        description: Radius in kilometers for output.
+                        type: number
+                        format: float
+                        example: 5
+  /template/{id|name}/download:
+    get:
+      tags:
+      - Template
+      summary: Download a template as a file
+      description: 'Download the content of a template. Please note that this request returns exactly the same JSON as `/template/{id|name}`
+
+        The `id|name` is requested in one of 2 ways:
+
+        * Specifying the `id` of the custom template which you have previously created.
+
+        * Specifying the `name` of the system template which is available. **Please note that some system templates may not have the same number of response values as a custom template.**'
+      parameters:
+      - in: path
+        required: true
+        name: id|name
+        description: The `id` of a custom template which has been created, or the `name` of a system template which is available.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Force the browser to download the file.
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=Cloud-RF_MPU5.json
+      operationId: getTemplateById|nameDownload
+      x-operation-id-source: derived
+  /template/{id}/delete:
     post:
-      operationId: createTemplate
-      summary: Create template
-      description: Store a new custom template.
       tags:
       - Template
+      summary: Delete a custom template
+      description: Delete a custom template which has been created by your user account.
+      parameters:
+      - in: path
+        required: true
+        name: id
+        description: The `id` of a custom template which should be deleted.
+        schema:
+          type: integer
       responses:
         '200':
-          description: Created.
+          description: Success - JSON response indicating a successful deletion of a custom template.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Any messages associated with the response.
+                    example: Successfully deleted template with ID 59324.
+      operationId: postTemplateByIdDelete
+      x-operation-id-source: derived
+  /template/{name}/favourite:
+    post:
+      tags:
+      - Template
+      summary: Favourite a system template
+      description: Favourite a system template.
+      parameters:
+      - in: path
+        required: true
+        name: name
+        description: The `name` of the system template which you would like to favourite.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success - JSON response indicating a successful favourite of a system template.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Any messages associated with the response.
+                    example: Successfully favourited template 'MPU5'.
+      operationId: postTemplateByNameFavourite
+      x-operation-id-source: derived
+  /template/{name}/unfavourite:
+    post:
+      tags:
+      - Template
+      summary: Unfavourite a system template
+      description: Unfavourite a system template.
+      parameters:
+      - in: path
+        required: true
+        name: name
+        description: The `name` of the system template which you would like to unfavourite.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success - JSON response indicating a successful unfavourite of a system template.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Any messages associated with the response.
+                    example: Successfully unfavourited template 'MPU5'.
+      operationId: postTemplateByNameUnfavourite
+      x-operation-id-source: derived
+  /template/create:
+    post:
+      tags:
+      - Template
+      summary: Store a new custom template
+      description: Store a new custom template. This endpoint accepts either a JSON data payload, or it can be requested by sending multipart form data of a JSON file with the same contents as the JSON data payload.
+      requestBody:
+        description: This endpoint accepts either a JSON data payload, or it can be requested by sending multipart form data of a JSON file with the same contents as the JSON data payload.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                site:
+                  type: string
+                  description: Site name
+                  example: Site
+                network:
+                  type: string
+                  description: Network name
+                  example: Network
+                engine:
+                  type: number
+                  format: integer
+                  description: 'The processing engine associated with the template.
+
+                    * `1` - GPU
+
+                    * `2` - CPU
+
+                    '
+                  example: 2
+                coordinates:
+                  type: number
+                  format: integer
+                  description: 'The coordinates system associated with the template.
+
+                    * `1` - Decimal Degrees
+
+                    * `2` - Degrees Minutes Seconds
+
+                    * `3` - MGRS / UTM
+
+                    '
+                  example: 1
+                transmitter:
+                  type: object
+                  properties:
+                    lat:
+                      description: Latitude of transmitter in WGS84 decimal degrees.
+                      type: number
+                      format: float
+                      example: 38.913
+                    lon:
+                      description: Longitude of transmitter in WGS84 decimal degrees.
+                      type: number
+                      format: float
+                      example: 1.44
+                    alt:
+                      description: Altitude of transmitter above ground level.
+                      type: number
+                      format: integer
+                      example: 1
+                    frq:
+                      description: Center frequency in megahertz.
+                      type: number
+                      format: integer
+                      example: 446
+                    txw:
+                      description: Transmitter power in watts before the antenna.
+                      type: number
+                      format: float
+                      example: 1
+                    bwi:
+                      description: Bandwidth in MHz.
+                      type: number
+                      format: float
+                      example: 0.1
+                    powerUnit:
+                      description: The RF power unit being used, either `W` or `dBm`
+                      type: string
+                      example: W
+                receiver:
+                  $ref: '#/components/schemas/Receiver'
+                feeder:
+                  type: object
+                  properties:
+                    flt:
+                      description: The feeder line type.
+                      type: number
+                      format: integer
+                      example: 1
+                    fll:
+                      description: The feeder line length.
+                      type: number
+                      format: integer
+                      example: 0
+                    fcc:
+                      description: The feeder line number of connectors.
+                      type: number
+                      format: integer
+                      example: 0
+                antenna:
+                  type: object
+                  properties:
+                    mode:
+                      description: 'The type of template which is being used:
+
+                        * `template` is a pre-defined template of known pattern.
+
+                        * `custom` is a custom template which will be built based on values.
+
+                        '
+                      type: string
+                      example: template
+                    txg:
+                      description: Antenna gain
+                      type: number
+                      format: float
+                      example: 2.15
+                    txl:
+                      description: Antenna feeder loss
+                      type: number
+                      format: float
+                      example: 0
+                    ant:
+                      description: Identifier of antenna if `mode` is `template`
+                      type: number
+                      format: integer
+                      example: 39
+                    azi:
+                      description: Antenna azimuth in degrees North.
+                      example: 0
+                    tlt:
+                      description: Antenna tilt in degrees below the horizon (inverted) where horizon is `0`.
+                      type: number
+                      format: integer
+                      example: 0
+                    hbw:
+                      description: Custom antenna horizontal beamwidth in degrees.
+                      type: number
+                      format: integer
+                      example: 120
+                    vbw:
+                      description: Custom antenna vertical beamwidth in degrees.
+                      type: number
+                      format: integer
+                      example: 120
+                    fbr:
+                      description: Front-to-back ratio measured in dB.
+                      type: number
+                      format: float
+                      example: 2.15
+                    pol:
+                      description: 'Antenna polarization:
+
+                        * `v` - Vertical
+
+                        * `h` - Horizontal
+
+                        '
+                      type: string
+                      example: v
+                model:
+                  type: object
+                  properties:
+                    pm:
+                      description: "Propagation model:\n* `1` - Irregular Terrain Model (ITM) (Longley-Rice)\n* `2` - Line of Sight (LOS)\n* `3` - Okumura-Hata \n* `4` - ITU-R P.1812\n* `5` - SUI Microwave\n* `6` - COST231-Hata\n* `7` - ITU-R P.525 (Free space path loss)\n* `8` - RADAR\n* `9` - Ericsson 9999\n* `10` - General Purpose\n* `11` - Egli VHF/UHF\n* `12` - HF NVIS\n* `13` - HF Skywave\n"
+                      type: number
+                      format: integer
+                      example: 1
+                    pe:
+                      description: 'Propagation model subtype (environment):
+
+                        * `1` - Conservative (Urban)
+
+                        * `2` - Average (Suburban)
+
+                        * `3` - Optimistic (Rural)
+
+                        '
+                      type: number
+                      format: integer
+                      example: 2
+                    ked:
+                      description: "Include knife edge diffraction for enhancing models with NLOS coverage :\n  * `0` - Diffraction disabled.\n  * `1` - Knife-edge diffraction enabled.\n  * `2` - Bullington diffraction enabled.\n  * `3` - Giovanelli diffraction enabled.\n  * `4` - Deygout diffraction enabled.\n  * `5` - Epstein-Peterson diffraction enabled.\n"
+                      type: number
+                      format: integer
+                      example: 1
+                    rel:
+                      description: Model reliability (fade margin) represented as a percentage (%).
+                      type: number
+                      format: integer
+                      example: 90
+                    month:
+                      description: HF Skywave only - Month of the year
+                      type: number
+                      format: integer
+                      example: 6
+                      minimum: 1
+                      maximum: 12
+                    hour:
+                      description: HF Skywave only - Hour of the day
+                      type: number
+                      format: integer
+                      example: 12
+                      minimum: 0
+                      maximum: 23
+                    sunspots_r12:
+                      description: HF Skywave only - Average international sunspot number (https://www.voacap.com/2023/understanding/choosingssn.html)
+                      type: number
+                      format: integer
+                      example: 100
+                      minimum: 0
+                      maximum: 200
+                environment:
+                  $ref: '#/components/schemas/Environment'
+                output:
+                  type: object
+                  properties:
+                    units:
+                      description: 'Define global distance units applied to heights and distances:
+
+                        * `m` - metric.
+
+                        * `f` - imperial.
+
+                        '
+                      type: string
+                      example: m
+                    col:
+                      description: Colour schema code OR filename string of your chosen output colour schema.
+                      example: RAINBOW.dBm
+                    out:
+                      description: 'Measured units:
+
+                        * `1` - Path loss (dB)
+
+                        * `2` - Received power (dBm)
+
+                        * `3` - Field strength (dBuV)
+
+                        * `4` - Signal-to-Noise Ratio (dB)
+
+                        * `5` - Bit-Error-Rate (BER)
+
+                        * `6` - Reference Signal Received Power (dBm)
+
+                        * `7` - Best site analysis (%)
+
+                        * `8` - Throughput (Mbps)
+
+                        * `9` - Throughput (kbps)
+
+                        '
+                      type: number
+                      format: integer
+                      example: 2
+                    ber:
+                      description: 'Bit-Error-Rate:
+
+                        * `1` - 0.1 / 10e-1
+
+                        * `2` - 0.01 / 10e-2
+
+                        * `3` - 0.001 / 10e-3
+
+                        * `4` - 0.0001 / 10e-4
+
+                        * `5` - 0.00001 / 10e-5
+
+                        * `6` - 0.000001 / 10e-6
+
+
+                        LoRa Spread Factors:
+
+                        * `7` - LoRa SF7 / 5469bps
+
+                        * `8` - LoRa SF8 / 3125bps
+
+                        * `9` - LoRa SF9 / 1758bps
+
+                        * `10` - LoRa SF10 / 977bps
+
+                        * `11` - LoRa SF11 / 537bps
+
+                        * `12` - LoRa SF12 / 293bps
+
+                        '
+                      type: number
+                      format: integer
+                      example: 2
+                    mod:
+                      description: 'Modulation as combined with the `ber` value:
+
+                        * `1` - 4QAM
+
+                        * `2` - 16QAM
+
+                        * `3` - 64QAM
+
+                        * `4` - 256QAM
+
+                        * `5` - 1024QAM
+
+                        * `6` - BPSK
+
+                        * `7` - QPSK
+
+                        * `8` - 8PSK
+
+                        * `9` - 16PSK
+
+                        * `10` - 32PSK
+
+                        * `11` - LoRa
+
+                        '
+                      type: number
+                      format: integer
+                      example: 7
+                    nf:
+                      description: Noise floor.
+                      type: number
+                      format: float
+                      example: -100
+                    res:
+                      description: Resolution in meters for produced output.
+                      type: number
+                      format: integer
+                      example: 20
+                    rad:
+                      description: Radius in kilometers for output.
+                      type: number
+                      format: float
+                      example: 5
+      responses:
+        '200':
+          description: Success - JSON response indicating a saving of a custom template.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Any messages associated with the response.
+                    example: Successfully stored template.
+      operationId: postTemplateCreate
+      x-operation-id-source: derived
 components:
+  schemas:
+    Environment:
+      type: object
+      properties:
+        clt:
+          description: Clutter profile name. If not supplied, but `cll` > `0` then `Minimal.clt` will be used
+          type: string
+          default: Minimal.clt
+        elevation:
+          description: 'Elevation:
+
+            * `1` - Digital Surface Model (DSM)
+
+            * `2` - Digital Terrain Model (DTM)
+
+            '
+          type: number
+          format: integer
+          minimum: 1
+          maximum: 2
+          default: 1
+          example: 1
+          enum:
+          - 1
+          - 2
+        landcover:
+          description: 'Global 10m landcover:
+
+            * `0` - Disabled
+
+            * `1` - Enabled
+
+            '
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 1
+          default: 0
+          example: 0
+          enum:
+          - 0
+          - 1
+        buildings:
+          description: 'Global OSM buildings layer to enhance DTM:
+
+            * `0` - Disabled
+
+            * `1` - Enabled
+
+            '
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 1
+          default: 0
+          example: 0
+          enum:
+          - 0
+          - 1
+        obstacles:
+          description: 'Custom obstacles / clutter:
+
+            * `0` - Disabled
+
+            * `1` - Enabled
+
+            '
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 1
+          default: 0
+          example: 0
+          enum:
+          - 0
+          - 1
+    Receiver:
+      type: object
+      properties:
+        lat:
+          description: Latitude of receiver in WGS84 decimal degrees.
+          type: number
+          format: float
+          minimum: -89
+          maximum: 89
+          default: 0
+          example: 38.906986
+        lon:
+          description: Longitude of receiver in WGS84 decimal degrees.
+          type: number
+          format: float
+          minimum: -180
+          maximum: 180
+          default: 0
+          example: 1.421416
+        alt:
+          description: Altitude of receiver above ground level in `metric` or `imperial`. Distance unit set in `output` object.
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 120000
+          default: 0.1
+        rxg:
+          description: Receiver antenna gain in dBi. Please note that when you use RADAR propagation model (`pm` value `8`) then receiver antenna gain is ignored.
+          type: number
+          format: float
+          minimum: -10
+          maximum: 60
+          default: 2.15
+          example: 3
+        rxs:
+          description: Receiver sensitivity/threshold in measured units. Measured units set in `output` object.
+          type: number
+          format: float
+          minimum: -140
+          maximum: 200
+          default: -90
+          example: -100
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: key
-externalDocs:
-  description: CloudRF Developer Documentation
-  url: https://cloudrf.com/documentation/developer/
+      description: An APIKey passed in the request headers.
