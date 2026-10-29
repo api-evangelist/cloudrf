@@ -1,4 +1,4 @@
-# CloudRF (cloudrf)
+# CloudRF
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,68 +66,141 @@
 
 CloudRF is a radio frequency (RF) propagation, coverage modeling, and wireless network planning service. The HTTPS REST API at api.cloudrf.com offers point-to-multipoint coverage heatmaps, point-to-point path analysis, mesh networks, multisite, HF point-to-multipoint and point-to-point analysis, 3D coverage, satellite modeling, interference detection, geo-location of signals, archive and export of calculations, clutter and noise data management, account metrics, and reusable templates. Authentication is by API key passed as the `key` HTTP header.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/cloudrf/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/cloudrf/refs/heads/main/apis.yml)
+**Areas:** Coverage Modeling · HF Propagation · Mesh Network · Radio Frequency · RF · Satellite · Signal Analysis · Telecommunications · Wireless Planning
 
-## Scope
+## CloudRF on APIs.io
 
-- **Type:** Index
-- **Position:** Consumer
-- **Access:** 3rd-Party
+Everything profiled for CloudRF is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/cloudrf/](https://apis.io/providers/cloudrf/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (7)
 
-- Coverage Modeling
-- HF Propagation
-- Mesh Network
-- Radio Frequency
-- RF
-- Satellite
-- Signal Analysis
-- Telecommunications
-- Wireless Planning
+- [CloudRF Account API](https://apis.io/apis/cloudrf/cloudrf-account-api/) — Account-level resources such as metrics.
+- [CloudRF Analyse API](https://apis.io/apis/cloudrf/cloudrf-analyse-api/) — Analyse calculations including best-site, best-server, interference, merge, and signal location.
+- [CloudRF Create API](https://apis.io/apis/cloudrf/cloudrf-create-api/) — Create coverage, path, multipoint, mesh, and HF calculations.
+- [CloudRF Manage API](https://apis.io/apis/cloudrf/cloudrf-manage-api/) — Archive, export, clutter, and noise data management.
+- [CloudRF Satellite API](https://apis.io/apis/cloudrf/cloudrf-satellite-api/) — Satellite coverage modeling.
+- [CloudRF Template API](https://apis.io/apis/cloudrf/cloudrf-template-api/) — User and system templates.
+- [CloudRF 3 D API](https://apis.io/apis/cloudrf/cloudrf-3-d-api/) — 3D coverage and model upload operations.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2024-07-02
-- **Modified:** 2026-05-19
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Agentic access (1)
 
-### CloudRF API
+Which operations an agent can call, which act, and which need a human in the loop.
 
-Public REST API for RF propagation, coverage modeling, mesh and multisite analysis, HF analysis, 3D and satellite modeling, interference detection, signal geo-location, archive/export, clutter and noise data, and reusable templates. Authentication is via the `key` HTTP header.
+- [Cloudrf Agentic Access](https://apis.io/agentic-access/cloudrf/cloudrf-agentic-access/)
 
-- **Human URL:** [https://cloudrf.com/documentation/developer/](https://cloudrf.com/documentation/developer/)
+#### JSON-LD (1)
 
-#### Tags
+Linked-data contexts for the provider's vocabulary.
 
-- Coverage Modeling
-- RF
-- Signal Analysis
+- [Cloudrf Context](https://apis.io/jsonld/cloudrf/cloudrf-context/)
 
-#### Properties
+#### Collections (8)
 
-- [Documentation](https://cloudrf.com/documentation/developer/)
-- [Reference](https://cloudrf.com/documentation/developer/swagger-ui/)
-- [OpenAPI](openapi/cloudrf-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cloudrf.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cloudrf.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Code  Samples](https://github.com/Cloud-RF/CloudRF-API-clients)
+Postman and Open Collection request collections.
 
-## Common Properties
+- [CloudRF API](https://apis.io/collections/cloudrf/open-cloudrf/)
+- [CloudRF 3D API](https://apis.io/collections/cloudrf/open-cloudrf-3d-api/)
+- [CloudRF 3D Account API](https://apis.io/collections/cloudrf/open-cloudrf-account-api/)
+- [CloudRF 3D Analyse API](https://apis.io/collections/cloudrf/open-cloudrf-analyse-api/)
+- [CloudRF 3D Create API](https://apis.io/collections/cloudrf/open-cloudrf-create-api/)
+- [CloudRF 3D Manage API](https://apis.io/collections/cloudrf/open-cloudrf-manage-api/)
+- [CloudRF 3D Satellite API](https://apis.io/collections/cloudrf/open-cloudrf-satellite-api/)
+- [CloudRF 3D Template API](https://apis.io/collections/cloudrf/open-cloudrf-template-api/)
 
-- [LinkedIn](https://www.linkedin.com/company/cloudrf)
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [CloudRF API Rules](https://apis.io/rules/cloudrf/cloudrf-rules/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Cloudrf Authentication](https://apis.io/security/cloudrf/cloudrf-authentication/)
+- [Cloudrf Domain Security](https://apis.io/security/cloudrf/cloudrf-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Cloudrf Plans Pricing](https://apis.io/plans/cloudrf/cloudrf-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Cloudrf Rate Limits](https://apis.io/rate-limits/cloudrf/cloudrf-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Cloudrf Finops](https://apis.io/finops/cloudrf/cloudrf-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://cloudrf.com/)
 - [Documentation](https://cloudrf.com/documentation/)
-- [Developer  Documentation](https://cloudrf.com/documentation/developer/)
-- [API Reference](https://cloudrf.com/documentation/developer/swagger-ui/)
-- [Code  Samples](https://github.com/Cloud-RF/CloudRF-API-clients)
-- [Privacy Policy](https://cloudrf.com/privacy)
-- [OpenAPI](openapi/cloudrf-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [JSON-LD](json-ld/cloudrf-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
-- [Spectral Rules](rules/cloudrf-rules.yml) — [Spectral](https://docs.stoplight.io/docs/spectral)
+- [API reference](https://cloudrf.com/documentation/developer/swagger-ui/)
+- [Blog](https://cloudrf.com/feed/)
+- [Privacy policy](https://cloudrf.com/privacy)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 26.8** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 57.1 |
+| Contract quality | 56.1 |
+| Contract governance | 11.4 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 23.8 |
+| Access clarity | 7.9 |
+
+**Agent readiness 19.2** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 14.2** — Telecommunications
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/cloudrf/](https://apis.io/providers/cloudrf/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for CloudRF: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/cloudrf/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
